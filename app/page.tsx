@@ -1,47 +1,10 @@
-const services = [
-  {
-    icon: <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 17.5h7M17.5 14v7"/></svg>,
-    title: 'CXM & UI Architecture',
-    desc: 'Experience frameworks and design systems that scale with your ambitions.',
-    tag: 'Strategy + Build',
-  },
-  {
-    icon: <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>,
-    title: 'App Architecture & POCs',
-    desc: 'Fast, reliable proof-of-concept development. Test ideas without betting the farm.',
-    tag: 'Dev + Prototype',
-  },
-  {
-    icon: <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>,
-    title: 'Rapid Marketing Sites',
-    desc: 'Campaign-ready landing pages and marketing sites built at pace, without cutting corners.',
-    tag: 'Web + CRO',
-  },
-  {
-    icon: <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
-    title: 'GA4 Analytics',
-    desc: 'Proper measurement architecture. Tag strategy, event taxonomy, dashboards, and insights.',
-    tag: 'Data + Insight',
-  },
-  {
-    icon: <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>,
-    title: 'Animation & Interactivity',
-    desc: 'Motion design and micro-interactions that enhance rather than decorate.',
-    tag: 'Motion + UX',
-  },
-  {
-    icon: <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="5" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="3" y="12" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="5" rx="1"/></svg>,
-    title: 'CMS Services',
-    desc: 'Any CMS, built and rescued. Platform transformations, content migrations, and emergency recoveries done properly.',
-    tag: 'CMS + Migration',
-  },
-]
-
 const marqueeItems = [
   'CXM Strategy', 'UI Architecture', 'App & POC Development',
   'Rapid Marketing Sites', 'GA4 Analytics', 'Animation & Motion',
   'CMS & Migrations', 'CMS Rescue',
 ]
+
+import { TalentsGrid } from './TalentsGrid'
 
 export default function Home() {
   return (
@@ -94,23 +57,7 @@ export default function Home() {
       </div>
 
       {/* SERVICES */}
-      <section className="v2-expertise" id="services">
-        <div className="v2-expertise-left">
-          <h2>Eight disciplines.<br />One <span className="accent">practice.</span></h2>
-          <p>We don&apos;t subcontract what we can&apos;t do. Everything we offer is something
-          we&apos;ve done for real clients, under real pressure, with real results.</p>
-        </div>
-        <div className="v2-expertise-right">
-          {services.map((s) => (
-            <div key={s.title} className="v2-exp-card">
-              <div className="v2-exp-icon">{s.icon}</div>
-              <h3>{s.title}</h3>
-              <p>{s.desc}</p>
-              <span className="v2-exp-tag">{s.tag}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+      <TalentsGrid />
 
       {/* ABOUT / PROFILE */}
       <section className="v2-profile" id="about">
