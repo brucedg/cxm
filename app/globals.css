@@ -56,10 +56,9 @@ body {
 
 /* ===== HERO ===== */
 .v2-hero {
-  min-height: 100vh;
-  padding: 140px 60px 80px;
+  padding: 80px 60px 80px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   border-bottom: 1px solid #e8e8e4;
 }
 .v2-hero-inner {
