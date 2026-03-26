@@ -47,17 +47,6 @@ export default function Home() {
   return (
     <div className="v2" style={{ background: '#fafaf8', color: '#111', fontFamily: "'DM Sans', sans-serif" }}>
 
-      {/* NAV */}
-      <nav className="v2-nav">
-        <div className="v2-logo">CXM<span>.NZ</span></div>
-        <div className="v2-nav-links">
-          <a href="#services">Services</a>
-          <a href="#approach">Approach</a>
-          <a href="#about">About</a>
-          <a className="v2-nav-cta" href="#contact">Start a project</a>
-        </div>
-      </nav>
-
       {/* HERO */}
       <section className="v2-hero">
         <div className="v2-hero-inner">
