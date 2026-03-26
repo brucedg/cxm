@@ -20,7 +20,16 @@ export default function AdminPage() {
     if (checkedStorage.current) return
     checkedStorage.current = true
     const stored = sessionStorage.getItem('cxm-admin')
-    if (stored) { setPassword(stored); setAuthed(true) }
+    if (stored) {
+      // Validate stored password is still valid
+      const header = `Basic ${btoa(`admin:${stored}`)}`
+      fetch('/api/cloudinary', { headers: { Authorization: header } })
+        .then(res => {
+          if (res.ok) { setPassword(stored); setAuthed(true) }
+          else sessionStorage.removeItem('cxm-admin')
+        })
+        .catch(() => sessionStorage.removeItem('cxm-admin'))
+    }
   }, [])
 
   const authHeader = `Basic ${btoa(`admin:${password}`)}`
@@ -69,11 +78,19 @@ export default function AdminPage() {
       <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 2rem 4rem' }}>
         <AdminHeader breadcrumb={panel === 'hero' ? 'Hero Content' : panel === 'talents' ? 'Talents' : panel === 'contact' ? 'Contact Details' : 'Social Channels'} />
 
-        <div style={{ display: 'flex', gap: '.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '.5rem', marginBottom: '2rem', flexWrap: 'wrap', alignItems: 'center' }}>
           <button onClick={() => setPanel('hero')} style={tabStyle(panel === 'hero')}>Hero Content</button>
           <button onClick={() => setPanel('talents')} style={tabStyle(panel === 'talents')}>Talents</button>
           <button onClick={() => setPanel('contact')} style={tabStyle(panel === 'contact')}>Contact Details</button>
           <button onClick={() => setPanel('social')} style={tabStyle(panel === 'social')}>Social Channels</button>
+          <div style={{ marginLeft: 'auto' }}>
+            <button
+              onClick={() => { sessionStorage.removeItem('cxm-admin'); setAuthed(false); setPassword('') }}
+              style={{ background: 'none', border: '1px solid #ddd', borderRadius: 4, padding: '.4rem 1rem', fontSize: '.82rem', color: '#999', cursor: 'pointer' }}
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
         <hr style={{ border: 'none', borderTop: '1px solid #e8e8e4', margin: '0 0 1.5rem' }} />
