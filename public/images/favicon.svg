@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <style>
+    path { fill: #1a4d7c; }
+    @media (prefers-color-scheme: dark) { path { fill: #6ba3d6; } }
+  </style>
+  <!-- C -->
+  <path d="M38 25c-16 0-28 12-28 25s12 25 28 25c8 0 15-3 20-9l-6-5c-3 4-8 7-14 7-11 0-20-8-20-18s9-18 20-18c6 0 11 3 14 7l6-5c-5-6-12-9-20-9z"/>
+  <!-- X -->
+  <path d="M42 35l12 15-12 15h10l7-9 7 9h10l-12-15 12-15h-10l-7 9-7-9z"/>
+  <!-- M -->
+  <path d="M72 35v30h8V45l6 10h4l6-10v20h8V35h-9l-7 12-7-12z"/>
+</svg>
