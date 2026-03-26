@@ -10,7 +10,7 @@ async function getSettings() {
     const map: Record<string, any> = {}
     for (const r of rows) map[r.key] = r.value
     return {
-      hero: map.hero as { tagline: string; title: string; titleLight: string; titleAccent: string; titleEnd: string; description: string; ctas: { text: string; url: string; style: string }[]; disciplines: string[] } | undefined,
+      hero: map.hero as { tagline: string; title: string; titleLight: string; titleAccent: string; titleEnd: string; description: string; ctas: { text: string; url: string; style: string }[]; disciplines: string[]; backgroundImage?: string } | undefined,
       contact: map.contact as { email: string; location: string; availability: string; responseTime: string } | undefined,
       social: (map.social_channels || []) as { name: string; url: string }[],
     }
@@ -29,6 +29,7 @@ const defaultHero = {
     { text: 'Talk to us', url: '#contact', style: 'secondary' },
   ],
   disciplines: ['CXM', 'UI/UX', 'Analytics', 'CMS', 'Motion', 'POC Dev'],
+  backgroundImage: '',
 }
 
 const defaultContact = {
@@ -53,10 +54,11 @@ export default async function Home() {
     <div className="v2" style={{ background: '#fafaf8', color: '#111', fontFamily: "'DM Sans', sans-serif" }}>
 
       {/* HERO */}
-      <section className="v2-hero">
-        <div className="v2-hero-inner">
+      <section className="v2-hero" style={hero.backgroundImage ? { background: `url(${hero.backgroundImage}) center/cover no-repeat` } : undefined}>
+        <div>
+          <div className="v2-tag">{hero.tagline}</div>
+          <div className="v2-hero-inner">
           <div>
-            <div className="v2-tag">{hero.tagline}</div>
             <h1>
               {hero.title}<br />
               <span className="light">{hero.titleLight}</span><br />
@@ -79,6 +81,7 @@ export default async function Home() {
                 ))}
               </div>
             </div>
+          </div>
           </div>
         </div>
       </section>

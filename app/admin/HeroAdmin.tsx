@@ -1,20 +1,21 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 type CTA = { text: string; url: string; style: string }
 type Hero = {
   tagline: string; title: string; titleLight: string; titleAccent: string; titleEnd: string;
-  description: string; ctas: CTA[]; disciplines: string[]
+  description: string; ctas: CTA[]; disciplines: string[]; backgroundImage?: string
 }
 
-const empty: Hero = { tagline: '', title: '', titleLight: '', titleAccent: '', titleEnd: '', description: '', ctas: [], disciplines: [] }
+const empty: Hero = { tagline: '', title: '', titleLight: '', titleAccent: '', titleEnd: '', description: '', ctas: [], disciplines: [], backgroundImage: '' }
 
 export function HeroAdmin({ authHeader }: { authHeader: string }) {
   const [form, setForm] = useState<Hero>(empty)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [loading, setLoading] = useState(true)
+  const mlRef = useRef<any>(null)
 
   useEffect(() => {
     fetch('/api/settings?key=hero').then(r => r.json()).then(setForm).catch(() => {}).finally(() => setLoading(false))
@@ -38,11 +39,68 @@ export function HeroAdmin({ authHeader }: { authHeader: string }) {
     setForm(prev => { const ctas = [...prev.ctas]; ctas[i] = { ...ctas[i], [field]: value }; return { ...prev, ctas } })
   }
 
+  const openMediaLibrary = async () => {
+    const res = await fetch('/api/cloudinary', { headers: { Authorization: authHeader } })
+    if (!res.ok) return
+    const auth = await res.json()
+    const w = window as any
+    const scriptId = 'cloudinary-ml-script'
+
+    const launch = () => {
+      if (mlRef.current) { mlRef.current.show(); return }
+      mlRef.current = w.cloudinary.createMediaLibrary(
+        {
+          cloud_name: auth.cloud_name,
+          api_key: auth.api_key,
+          timestamp: auth.timestamp,
+          signature: auth.signature,
+          folder: { path: 'cxm', resource_type: 'image' },
+          multiple: false, max_files: 1, insert_caption: 'Select',
+        },
+        {
+          insertHandler: (data: any) => {
+            if (data?.assets?.[0]?.secure_url) {
+              setForm(f => ({ ...f, backgroundImage: data.assets[0].secure_url }))
+            }
+          },
+        },
+      )
+      mlRef.current.show()
+    }
+
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement('script')
+      script.id = scriptId
+      script.src = 'https://media-library.cloudinary.com/global/all.js'
+      script.onload = launch
+      document.head.appendChild(script)
+    } else { launch() }
+  }
+
   if (loading) return <p style={{ color: '#999' }}>Loading...</p>
 
   return (
     <div>
       <p style={{ fontSize: '.85rem', color: '#999', marginBottom: '1.5rem' }}>Edit the hero section on the homepage.</p>
+
+      {/* Background Image */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <label style={labelStyle}>Background Image</label>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', border: '1px solid #e8e8e4', borderRadius: 8, padding: '.75rem 1rem' }}>
+          {form.backgroundImage ? (
+            <img src={form.backgroundImage.replace('/upload/', '/upload/w_200,h_100,c_fill/')} alt="Background" style={{ width: 120, height: 60, objectFit: 'cover', borderRadius: 6, flexShrink: 0 }} />
+          ) : (
+            <div style={{ width: 120, height: 60, borderRadius: 6, background: '#f0f0ee', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#bbb', fontSize: '.75rem', flexShrink: 0 }}>No image</div>
+          )}
+          <div style={{ flex: 1 }}>
+            <button onClick={openMediaLibrary} style={{ background: '#111', color: '#fff', border: 'none', borderRadius: 4, padding: '.4rem 1rem', fontSize: '.82rem', fontWeight: 600, cursor: 'pointer' }}>Browse</button>
+            {form.backgroundImage && (
+              <button onClick={() => setForm(f => ({ ...f, backgroundImage: '' }))} style={{ background: '#fee', color: '#c00', border: 'none', borderRadius: 4, padding: '.4rem 1rem', fontSize: '.82rem', fontWeight: 600, cursor: 'pointer', marginLeft: '.5rem' }}>Remove</button>
+            )}
+            <p style={{ fontSize: '.72rem', color: '#999', marginTop: '.3rem' }}>Used as the homepage hero background.</p>
+          </div>
+        </div>
+      </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem', marginBottom: '1.5rem' }}>
         <div>
