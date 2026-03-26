@@ -1,7 +1,7 @@
 import { getDb } from '@/lib/db'
 import { TalentsGrid } from './TalentsGrid'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 async function getSettings() {
   try {

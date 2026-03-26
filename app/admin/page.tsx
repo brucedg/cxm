@@ -30,7 +30,7 @@ export default function AdminPage() {
     setLoginError('')
     try {
       const header = `Basic ${btoa(`admin:${password}`)}`
-      const res = await fetch('/api/settings?key=hero', { headers: { Authorization: header } })
+      const res = await fetch('/api/cloudinary', { headers: { Authorization: header } })
       if (!res.ok) { setLoginError('Incorrect password'); return }
       sessionStorage.setItem('cxm-admin', password)
       setAuthed(true)

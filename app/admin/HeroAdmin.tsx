@@ -23,13 +23,14 @@ export function HeroAdmin({ authHeader }: { authHeader: string }) {
   const save = async () => {
     setSaving(true); setSaved(false)
     try {
-      await fetch('/api/settings', {
+      const res = await fetch('/api/settings', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: authHeader },
         body: JSON.stringify({ key: 'hero', value: form }),
       })
+      if (!res.ok) { alert('Save failed — check your login'); setSaving(false); return }
       setSaved(true); setTimeout(() => setSaved(false), 3000)
-    } catch {}
+    } catch { alert('Save failed') }
     setSaving(false)
   }
 
