@@ -1,5 +1,6 @@
 import { getDb } from '@/lib/db'
 import { TalentsGrid } from './TalentsGrid'
+import { BrandGrid } from './BrandGrid'
 
 export const dynamic = 'force-dynamic'
 
@@ -60,10 +61,10 @@ export default async function Home() {
           <div className="v2-hero-inner">
           <div>
             <h1>
-              {hero.title}<br />
-              <span className="light">{hero.titleLight}</span><br />
-              <span className="accent">{hero.titleAccent}</span><br />
-              {hero.titleEnd}
+              <span className="title-line">{hero.title}</span>
+              <span className="light">{hero.titleLight}</span>
+              <span className="accent">{hero.titleAccent}</span>
+              <span className="end">{hero.titleEnd}</span>
             </h1>
           </div>
           <div>
@@ -73,14 +74,7 @@ export default async function Home() {
                 <a key={i} className={`v2-cta-${cta.style}`} href={cta.url}>{cta.text}</a>
               ))}
             </div>
-            <div className="v2-clients-strip">
-              <p>Disciplines we practise</p>
-              <div className="clients">
-                {hero.disciplines.map(d => (
-                  <span key={d} className="client-tag">{d}</span>
-                ))}
-              </div>
-            </div>
+            <BrandGrid />
           </div>
           </div>
         </div>
