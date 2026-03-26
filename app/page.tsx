@@ -1,12 +1,54 @@
+import { getDb } from '@/lib/db'
+import { TalentsGrid } from './TalentsGrid'
+
+export const revalidate = 60
+
+async function getSettings() {
+  try {
+    const sql = getDb()
+    const rows = await sql`SELECT key, value FROM settings WHERE key IN ('hero', 'contact', 'social_channels')`
+    const map: Record<string, any> = {}
+    for (const r of rows) map[r.key] = r.value
+    return {
+      hero: map.hero as { tagline: string; title: string; titleLight: string; titleAccent: string; titleEnd: string; description: string; ctas: { text: string; url: string; style: string }[]; disciplines: string[] } | undefined,
+      contact: map.contact as { email: string; location: string; availability: string; responseTime: string } | undefined,
+      social: (map.social_channels || []) as { name: string; url: string }[],
+    }
+  } catch { return { hero: undefined, contact: undefined, social: [] } }
+}
+
+const defaultHero = {
+  tagline: 'Senior Digital Consultancy',
+  title: 'We build',
+  titleLight: 'the digital',
+  titleAccent: 'infrastructure',
+  titleEnd: 'of great brands.',
+  description: 'CXM brings twenty-plus years of hands-on expertise across CX strategy, UI engineering, analytics architecture, and CMS platform work. Senior thinking, without the senior overhead.',
+  ctas: [
+    { text: 'View our services', url: '#services', style: 'primary' },
+    { text: 'Talk to us', url: '#contact', style: 'secondary' },
+  ],
+  disciplines: ['CXM', 'UI/UX', 'Analytics', 'CMS', 'Motion', 'POC Dev'],
+}
+
+const defaultContact = {
+  email: 'hello@cxm.nz',
+  location: 'New Zealand · Remote-capable',
+  availability: 'Currently taking projects',
+  responseTime: 'Within 24 hours',
+}
+
 const marqueeItems = [
   'CXM Strategy', 'UI Architecture', 'App & POC Development',
   'Rapid Marketing Sites', 'GA4 Analytics', 'Animation & Motion',
   'CMS & Migrations', 'CMS Rescue',
 ]
 
-import { TalentsGrid } from './TalentsGrid'
+export default async function Home() {
+  const { hero: dbHero, contact: dbContact } = await getSettings()
+  const hero = dbHero || defaultHero
+  const contact = dbContact || defaultContact
 
-export default function Home() {
   return (
     <div className="v2" style={{ background: '#fafaf8', color: '#111', fontFamily: "'DM Sans', sans-serif" }}>
 
@@ -14,28 +56,25 @@ export default function Home() {
       <section className="v2-hero">
         <div className="v2-hero-inner">
           <div>
-            <div className="v2-tag">Senior Digital Consultancy</div>
+            <div className="v2-tag">{hero.tagline}</div>
             <h1>
-              We build<br />
-              <span className="light">the digital</span><br />
-              <span className="accent">infrastructure</span><br />
-              of great brands.
+              {hero.title}<br />
+              <span className="light">{hero.titleLight}</span><br />
+              <span className="accent">{hero.titleAccent}</span><br />
+              {hero.titleEnd}
             </h1>
           </div>
           <div>
-            <p className="v2-hero-desc">
-              CXM brings twenty-plus years of hands-on expertise across CX strategy,
-              UI engineering, analytics architecture, and CMS platform work. Senior
-              thinking, without the senior overhead.
-            </p>
+            <p className="v2-hero-desc">{hero.description}</p>
             <div className="v2-ctas">
-              <a className="v2-cta-primary" href="#services">View our services</a>
-              <a className="v2-cta-secondary" href="#contact">Talk to us</a>
+              {hero.ctas.map((cta, i) => (
+                <a key={i} className={`v2-cta-${cta.style}`} href={cta.url}>{cta.text}</a>
+              ))}
             </div>
             <div className="v2-clients-strip">
               <p>Disciplines we practise</p>
               <div className="clients">
-                {['CXM','UI/UX','Analytics','CMS','Motion','POC Dev'].map(d => (
+                {hero.disciplines.map(d => (
                   <span key={d} className="client-tag">{d}</span>
                 ))}
               </div>
@@ -97,10 +136,10 @@ export default function Home() {
         </div>
         <div>
           {[
-            { label: 'Email', value: 'hello@cxm.nz', href: 'mailto:hello@cxm.nz' },
-            { label: 'Location', value: 'New Zealand · Remote-capable', href: '#' },
-            { label: 'Availability', value: 'Currently taking projects', href: '#contact' },
-            { label: 'Response time', value: 'Within 24 hours', href: '#' },
+            { label: 'Email', value: contact.email, href: `mailto:${contact.email}` },
+            { label: 'Location', value: contact.location, href: '#' },
+            { label: 'Availability', value: contact.availability, href: '#contact' },
+            { label: 'Response time', value: contact.responseTime, href: '#' },
           ].map((item) => (
             <div key={item.label} className="v2-contact-item">
               <label>{item.label}</label>
