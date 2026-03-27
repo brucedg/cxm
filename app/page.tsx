@@ -1,6 +1,7 @@
 import { getDb } from '@/lib/db'
 import { TalentsGrid } from './TalentsGrid'
 import { BrandGrid } from './BrandGrid'
+import { SitesSlideshow } from './SitesSlideshow'
 
 export const dynamic = 'force-dynamic'
 
@@ -74,7 +75,10 @@ export default async function Home() {
                 <a key={i} className={`v2-cta-${cta.style}`} href={cta.url}>{cta.text}</a>
               ))}
             </div>
-            <BrandGrid />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', alignItems: 'start', marginTop: '2rem' }}>
+              <SitesSlideshow />
+              <BrandGrid />
+            </div>
           </div>
           </div>
         </div>
