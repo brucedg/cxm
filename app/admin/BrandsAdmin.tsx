@@ -7,10 +7,11 @@ type Brand = {
   name: string
   logo_url: string
   url: string
+  description: string
   sort_order: number
 }
 
-const empty = { name: '', logo_url: '', url: '', sort_order: 0 }
+const empty = { name: '', logo_url: '', url: '', description: '', sort_order: 0 }
 
 export function BrandsAdmin({ authHeader }: { authHeader: string }) {
   const [brands, setBrands] = useState<Brand[]>([])
@@ -31,7 +32,7 @@ export function BrandsAdmin({ authHeader }: { authHeader: string }) {
 
   const startEdit = (b: Brand) => {
     setEditing(b); setCreating(false)
-    setForm({ name: b.name, logo_url: b.logo_url, url: b.url, sort_order: b.sort_order })
+    setForm({ name: b.name, logo_url: b.logo_url, url: b.url, description: b.description, sort_order: b.sort_order })
   }
   const startCreate = () => { setEditing(null); setCreating(true); setForm({ ...empty, sort_order: brands.length + 1 }) }
   const cancel = () => { setEditing(null); setCreating(false); setForm(empty) }
@@ -125,6 +126,10 @@ export function BrandsAdmin({ authHeader }: { authHeader: string }) {
               <label style={labelStyle}>URL (optional)</label>
               <input style={inputStyle} value={form.url} onChange={e => setForm(f => ({ ...f, url: e.target.value }))} placeholder="https://..." />
             </div>
+            <div style={{ flex: 1 }}>
+              <label style={labelStyle}>Description</label>
+              <input style={inputStyle} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="One-line description" />
+            </div>
             <div style={{ width: 80 }}>
               <label style={labelStyle}>Order</label>
               <input style={inputStyle} type="number" value={form.sort_order} onChange={e => setForm(f => ({ ...f, sort_order: parseInt(e.target.value) || 0 }))} />
@@ -156,7 +161,7 @@ export function BrandsAdmin({ authHeader }: { authHeader: string }) {
             )}
             <div style={{ flex: 1, minWidth: 0 }}>
               <strong style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '.9rem' }}>{b.name}</strong>
-              {b.url && <p style={{ fontSize: '.75rem', color: '#999', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{b.url}</p>}
+              {b.description && <p style={{ fontSize: '.75rem', color: '#999', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{b.description}</p>}
             </div>
             <span style={{ fontSize: '.75rem', color: '#bbb', flexShrink: 0 }}>#{b.sort_order}</span>
             <div style={{ display: 'flex', gap: '.3rem', flexShrink: 0 }}>
