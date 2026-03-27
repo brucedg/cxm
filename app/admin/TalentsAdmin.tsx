@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { IconPicker } from './IconPicker'
+import { AdminModal } from './AdminModal'
 
 type Talent = {
   id: number
@@ -62,39 +63,28 @@ export function TalentsAdmin({ authHeader }: { authHeader: string }) {
         Manage the talent/service cards shown on the homepage. Drag to reorder by changing the sort number.
       </p>
 
-      {/* Edit/Create form */}
+      {/* Edit/Create Modal */}
       {(editing || creating) && (
-        <div style={{ border: '1px solid #e8e8e4', borderRadius: 12, padding: '1.5rem', marginBottom: '1.5rem', background: '#f9f9f7' }}>
-          <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem' }}>
-            {creating ? 'New Talent' : `Editing: ${editing!.title}`}
-          </h3>
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', marginBottom: '.75rem' }}>
-            <div>
-              <label style={labelStyle}>Icon</label>
-              <IconPicker value={form.icon} onChange={icon => setForm(f => ({ ...f, icon }))} />
+        <AdminModal title={creating ? 'New Talent' : `Edit: ${editing!.title}`} onClose={cancel}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end' }}>
+              <div>
+                <label style={labelStyle}>Icon</label>
+                <IconPicker value={form.icon} onChange={icon => setForm(f => ({ ...f, icon }))} />
+              </div>
+              <div style={{ flex: 1 }}><label style={labelStyle}>Title *</label><input style={inputStyle} value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} /></div>
             </div>
-            <div style={{ flex: 1 }}>
-              <label style={labelStyle}>Title *</label>
-              <input style={inputStyle} value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 100px', gap: '.75rem' }}>
+              <div><label style={labelStyle}>Tag</label><input style={inputStyle} value={form.tag} onChange={e => setForm(f => ({ ...f, tag: e.target.value }))} placeholder="e.g. Strategy + Build" /></div>
+              <div><label style={labelStyle}>Order</label><input style={inputStyle} type="number" value={form.sort_order} onChange={e => setForm(f => ({ ...f, sort_order: parseInt(e.target.value) || 0 }))} /></div>
             </div>
-            <div style={{ flex: 1 }}>
-              <label style={labelStyle}>Tag</label>
-              <input style={inputStyle} value={form.tag} onChange={e => setForm(f => ({ ...f, tag: e.target.value }))} placeholder="e.g. Strategy + Build" />
-            </div>
-            <div style={{ width: 80 }}>
-              <label style={labelStyle}>Order</label>
-              <input style={inputStyle} type="number" value={form.sort_order} onChange={e => setForm(f => ({ ...f, sort_order: parseInt(e.target.value) || 0 }))} />
+            <div><label style={labelStyle}>Description</label><textarea style={{ ...inputStyle, resize: 'vertical' }} rows={2} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
+            <div style={{ display: 'flex', gap: '.5rem', marginTop: '.5rem' }}>
+              <button onClick={save} disabled={saving || !form.title.trim()} style={{ ...btnStyle('#2563eb', '#fff'), opacity: saving ? 0.6 : 1 }}>{saving ? 'Saving...' : creating ? 'Create' : 'Save'}</button>
+              <button onClick={cancel} style={btnStyle('#f0f0ee', '#666')}>Cancel</button>
             </div>
           </div>
-          <div style={{ marginBottom: '.75rem' }}>
-            <label style={labelStyle}>Description</label>
-            <textarea style={{ ...inputStyle, resize: 'vertical' }} rows={2} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
-          </div>
-          <div style={{ display: 'flex', gap: '.5rem' }}>
-            <button onClick={save} disabled={saving || !form.title.trim()} style={{ ...btnStyle('#2563eb', '#fff'), opacity: saving ? 0.6 : 1 }}>{saving ? 'Saving...' : creating ? 'Create' : 'Save'}</button>
-            <button onClick={cancel} style={btnStyle('#f0f0ee', '#666')}>Cancel</button>
-          </div>
-        </div>
+        </AdminModal>
       )}
 
       {/* Add button */}
