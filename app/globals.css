@@ -134,7 +134,7 @@ body {
 }
 .v2-cta-secondary:hover { border-color: #fff; }
 .v2-clients-strip {
-  margin-top: 60px;
+  margin-top: -40px;
   padding-top: 60px;
   border-top: 1px solid rgba(255,255,255,.15);
 }
