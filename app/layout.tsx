@@ -4,8 +4,8 @@ import { Nav } from './Nav'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'CXM.NZ — Senior Digital Consultancy',
-  description: 'CX strategy, UI engineering, analytics architecture, and CMS platform work. Senior thinking, without the senior overhead.',
+  title: 'CXM.NZ — Digital Consultancy',
+  description: 'CX strategy, UI engineering, analytics architecture, and CMS platform work. Expert thinking, without the overhead.',
   icons: { icon: '/images/favicon.svg' },
 }
 

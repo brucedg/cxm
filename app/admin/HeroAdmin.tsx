@@ -105,7 +105,7 @@ export function HeroAdmin({ authHeader }: { authHeader: string }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem', marginBottom: '1.5rem' }}>
         <div>
           <label style={labelStyle}>Tagline</label>
-          <input style={inputStyle} value={form.tagline} onChange={e => setForm(f => ({ ...f, tagline: e.target.value }))} placeholder="Senior Digital Consultancy" />
+          <input style={inputStyle} value={form.tagline} onChange={e => setForm(f => ({ ...f, tagline: e.target.value }))} placeholder="Digital Consultancy" />
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.75rem' }}>
           <div>

@@ -19,12 +19,12 @@ async function getSettings() {
 }
 
 const defaultHero = {
-  tagline: 'Senior Digital Consultancy',
+  tagline: 'Digital Consultancy',
   title: 'We build',
   titleLight: 'the digital',
   titleAccent: 'infrastructure',
   titleEnd: 'of great brands.',
-  description: 'CXM brings twenty-plus years of hands-on expertise across CX strategy, UI engineering, analytics architecture, and CMS platform work. Senior thinking, without the senior overhead.',
+  description: 'CXM brings twenty-plus years of hands-on expertise across CX strategy, UI engineering, analytics architecture, and CMS platform work. Expert thinking, without the overhead.',
   ctas: [
     { text: 'View our services', url: '#services', style: 'primary' },
     { text: 'Talk to us', url: '#contact', style: 'secondary' },
@@ -98,7 +98,7 @@ export default async function Home() {
       {/* ABOUT / PROFILE */}
       <section className="v2-profile" id="about">
         <div>
-          <h2>Senior expertise.<br /><span className="accent">No</span> middle layers.</h2>
+          <h2>Deep expertise.<br /><span className="accent">No</span> middle layers.</h2>
           <p>When you engage CXM, you&apos;re working directly with the person who&apos;s spent
           two decades getting this right. No account managers. No juniors doing the
           actual work. Just someone who&apos;s been in the room long enough to know what matters.</p>
@@ -148,7 +148,7 @@ export default async function Home() {
 
       {/* FOOTER */}
       <footer className="v2-footer">
-        <p>© 2025 CXM.NZ — Senior Digital Consultancy</p>
+        <p>© 2025 CXM.NZ — Digital Consultancy</p>
         <p>CXM · UI · Analytics · CMS · Motion</p>
       </footer>
 
