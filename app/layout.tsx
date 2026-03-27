@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import { Nav } from './Nav'
 import './globals.css'
 
@@ -14,6 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Nav />
         {children}
+        <GoogleAnalytics gaId="G-J5D0J882DM" />
       </body>
     </html>
   )
