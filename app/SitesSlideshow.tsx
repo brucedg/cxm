@@ -168,10 +168,13 @@ export function SitesSlideshow() {
             {storyOpen.brands.length > 0 && (
               <div style={{ marginBottom: '1rem' }}>
                 <p style={{ fontSize: '.7rem', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', color: '#999', marginBottom: '.5rem' }}>Technologies</p>
-                <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '.75rem', flexWrap: 'wrap' }}>
                   {storyOpen.brands.map(b => (
-                    <div key={b.id} title={b.description ? `${b.name} — ${b.description}` : b.name} style={{ width: 36, height: 36, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f5f3' }}>
-                      <img src={b.logo_url} alt={b.name} style={{ width: 22, height: 22, objectFit: 'contain' }} />
+                    <div key={b.id} title={b.description ? `${b.name} — ${b.description}` : b.name} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.3rem' }}>
+                      <div style={{ width: 36, height: 36, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f5f3' }}>
+                        <img src={b.logo_url} alt={b.name} style={{ width: 22, height: 22, objectFit: 'contain' }} />
+                      </div>
+                      <span style={{ fontSize: '.55rem', fontWeight: 700, letterSpacing: '.5px', textTransform: 'uppercase', color: '#999' }}>{b.name}</span>
                     </div>
                   ))}
                 </div>
@@ -186,8 +189,11 @@ export function SitesSlideshow() {
                   {storyOpen.talents.map(t => {
                     const Icon = getIcon(t.icon)
                     return (
-                      <div key={t.id} title={t.description ? `${t.title} — ${t.description}` : t.title} style={{ width: 36, height: 36, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111' }}>
-                        <Icon size={18} color="#fff" strokeWidth={1.5} />
+                      <div key={t.id} title={t.description ? `${t.title} — ${t.description}` : t.title} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.3rem' }}>
+                        <div style={{ width: 36, height: 36, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111' }}>
+                          <Icon size={18} color="#fff" strokeWidth={1.5} />
+                        </div>
+                        <span style={{ fontSize: '.55rem', fontWeight: 700, letterSpacing: '.5px', textTransform: 'uppercase', color: '#999' }}>{t.title}</span>
                       </div>
                     )
                   })}
