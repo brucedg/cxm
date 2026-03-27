@@ -102,7 +102,7 @@ export function BrandGrid() {
                   textDecoration: 'none', fontWeight: 600,
                 }}
               >
-                Visit website →
+                Find out more about {selected.name} →
               </a>
             )}
           </div>
