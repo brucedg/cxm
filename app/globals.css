@@ -92,7 +92,7 @@ body {
 }
 .v2-hero h1 .title-line { display: inline-block; padding-bottom: 0.15em; border-bottom: 1px solid rgba(255,255,255,.5); margin-bottom: 0.1em; }
 .v2-hero h1 .accent { color: #000; text-shadow: none; -webkit-text-stroke: none; display: inline-block; padding-bottom: 0.15em; border-bottom: 1px solid rgba(255,255,255,.5); margin-bottom: 0.1em; }
-.v2-hero h1 .light { font-weight: 300; font-size: 0.5em; display: block; line-height: 1; margin: 0.15em 0; color: rgba(255,255,255,.7); text-shadow: 0 1px 6px rgba(0,0,0,.4); }
+.v2-hero h1 .light { font-weight: 300; font-size: 0.5em; display: block; line-height: 1; margin: 0.15em 0; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,.55); }
 .v2-hero h1 .end { font-size: 0.33em; font-weight: 300; display: block; line-height: 1; margin-top: 0.15em; color: #fff; text-shadow: none; }
 .v2-hero-desc {
   font-size: 17px;
@@ -125,14 +125,15 @@ body {
   color: #fff;
   padding: 14px 32px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none;
-  border: 1px solid rgba(255,255,255,.4);
+  background: #2563eb;
+  border: 1px solid #2563eb;
   border-radius: 3px;
   transition: all 0.2s;
   display: inline-block;
 }
-.v2-cta-secondary:hover { border-color: #fff; }
+.v2-cta-secondary:hover { background: #1d4ed8; border-color: #1d4ed8; }
 .v2-clients-strip {
   margin-top: -40px;
   padding-top: 60px;
@@ -144,7 +145,8 @@ body {
   font-weight: 300;
   letter-spacing: -0.5px;
   text-transform: none;
-  color: rgba(255,255,255,.7);
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0,0,0,.55);
   margin-bottom: 20px;
 }
 .v2-clients-strip .clients {

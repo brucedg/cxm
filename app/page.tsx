@@ -68,7 +68,7 @@ export default async function Home() {
             </h1>
           </div>
           <div>
-            <p className="v2-hero-desc">{hero.description}</p>
+            {hero.description && <p className="v2-hero-desc">{hero.description}</p>}
             <div className="v2-ctas">
               {hero.ctas.map((cta, i) => (
                 <a key={i} className={`v2-cta-${cta.style}`} href={cta.url}>{cta.text}</a>
