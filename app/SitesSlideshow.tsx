@@ -38,6 +38,7 @@ export function SitesSlideshow() {
         style={{
           position: 'relative', width: '100%', maxWidth: '404px', borderRadius: 12, overflow: 'hidden',
           aspectRatio: '16/10', cursor: 'pointer',
+          boxShadow: '0 8px 30px rgba(0,0,0,.25)',
         }}
       >
         {/* Image */}
