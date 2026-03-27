@@ -67,6 +67,9 @@ export default async function Home() {
               <span className="accent">{hero.titleAccent}</span>
               <span className="end">{hero.titleEnd}</span>
             </h1>
+            <div style={{ marginTop: '2rem' }}>
+              <SitesSlideshow />
+            </div>
           </div>
           <div>
             {hero.description && <p className="v2-hero-desc">{hero.description}</p>}
@@ -75,10 +78,7 @@ export default async function Home() {
                 <a key={i} className={`v2-cta-${cta.style}`} href={cta.url}>{cta.text}</a>
               ))}
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', alignItems: 'start', marginTop: '2rem' }}>
-              <SitesSlideshow />
-              <BrandGrid />
-            </div>
+            <BrandGrid />
           </div>
           </div>
         </div>

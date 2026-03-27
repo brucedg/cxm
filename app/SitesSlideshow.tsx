@@ -13,12 +13,10 @@ export function SitesSlideshow() {
   const [sites, setSites] = useState<Site[]>([])
   const [current, setCurrent] = useState(0)
   const [storyOpen, setStoryOpen] = useState<Site | null>(null)
-  const [hoveredBrand, setHoveredBrand] = useState<Brand | null>(null)
-  const [hoveredTalent, setHoveredTalent] = useState<Talent | null>(null)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
-    fetch('/api/sites').then(r => r.json()).then((all: Site[]) => setSites(all.filter(s => s.visible))).catch(() => {})
+    fetch('/api/sites').then(r => r.json()).then((all: Site[]) => setSites(all.filter(s => s.visible && s.image_url))).catch(() => {})
   }, [])
 
   // Auto-rotate
@@ -34,10 +32,14 @@ export function SitesSlideshow() {
 
   return (
     <>
-      <div style={{
-        position: 'relative', width: '100%', borderRadius: 12, overflow: 'hidden',
-        aspectRatio: '16/10', cursor: 'pointer',
-      }}>
+      <div
+        onMouseEnter={() => { if (timerRef.current) clearInterval(timerRef.current) }}
+        onMouseLeave={() => { if (sites.length > 1) timerRef.current = setInterval(() => setCurrent(c => (c + 1) % sites.length), 5000) }}
+        style={{
+          position: 'relative', width: '100%', maxWidth: '404px', borderRadius: 12, overflow: 'hidden',
+          aspectRatio: '16/10', cursor: 'pointer',
+        }}
+      >
         {/* Image */}
         <img
           src={site.image_url.replace('/upload/', '/upload/w_800,h_500,c_fill/')}
@@ -61,21 +63,50 @@ export function SitesSlideshow() {
           </h4>
         </div>
 
-        {/* Story button */}
+        {/* Info button */}
         <button
           onClick={() => setStoryOpen(site)}
           title="What's the story?"
           style={{
-            position: 'absolute', top: 10, right: 10,
-            width: 32, height: 32, borderRadius: '50%',
-            background: 'rgba(255,255,255,.2)', backdropFilter: 'blur(4px)',
-            border: '1px solid rgba(255,255,255,.3)', color: '#fff',
-            fontSize: '.9rem', cursor: 'pointer',
+            position: 'absolute', top: 10, right: 10, zIndex: 5,
+            width: 28, height: 28, borderRadius: '50%',
+            background: '#2563eb', border: 'none', color: '#fff',
+            fontSize: '.85rem', fontWeight: 700, fontStyle: 'italic', cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 2px 8px rgba(0,0,0,.3)',
+            fontFamily: 'Georgia, serif',
           }}
         >
-          ?
+          i
         </button>
+
+        {/* Prev/Next arrows */}
+        {sites.length > 1 && (
+          <>
+            <button
+              onClick={(e) => { e.stopPropagation(); setCurrent(c => (c - 1 + sites.length) % sites.length) }}
+              style={{
+                position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)', zIndex: 5,
+                width: 28, height: 28, borderRadius: '50%', border: 'none',
+                background: 'rgba(255,255,255,.8)', color: '#111', fontSize: '.9rem', fontWeight: 700,
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}
+            >
+              ‹
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); setCurrent(c => (c + 1) % sites.length) }}
+              style={{
+                position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', zIndex: 5,
+                width: 28, height: 28, borderRadius: '50%', border: 'none',
+                background: 'rgba(255,255,255,.8)', color: '#111', fontSize: '.9rem', fontWeight: 700,
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}
+            >
+              ›
+            </button>
+          </>
+        )}
 
         {/* Dots */}
         {sites.length > 1 && (
@@ -98,7 +129,7 @@ export function SitesSlideshow() {
       {/* Story modal */}
       {storyOpen && (
         <div
-          onClick={() => { setStoryOpen(null); setHoveredBrand(null); setHoveredTalent(null) }}
+          onClick={() => setStoryOpen(null)}
           style={{
             position: 'fixed', inset: 0, zIndex: 10000,
             background: 'rgba(0,0,0,.5)', display: 'flex',
@@ -116,7 +147,7 @@ export function SitesSlideshow() {
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.3rem', fontWeight: 700 }}>{storyOpen.title}</h3>
-              <button onClick={() => { setStoryOpen(null); setHoveredBrand(null); setHoveredTalent(null) }} style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#999' }}>✕</button>
+              <button onClick={() => setStoryOpen(null)} style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#999' }}>✕</button>
             </div>
 
             {storyOpen.image_url && (
@@ -137,28 +168,13 @@ export function SitesSlideshow() {
             {storyOpen.brands.length > 0 && (
               <div style={{ marginBottom: '1rem' }}>
                 <p style={{ fontSize: '.7rem', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', color: '#999', marginBottom: '.5rem' }}>Technologies</p>
-                <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap', position: 'relative' }}>
+                <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>
                   {storyOpen.brands.map(b => (
-                    <div
-                      key={b.id}
-                      onMouseEnter={() => { setHoveredBrand(b); setHoveredTalent(null) }}
-                      onMouseLeave={() => setHoveredBrand(null)}
-                      style={{
-                        width: 36, height: 36, borderRadius: 8, display: 'flex',
-                        alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-                        background: '#f5f5f3', transition: 'background .2s',
-                      }}
-                    >
+                    <div key={b.id} title={b.description ? `${b.name} — ${b.description}` : b.name} style={{ width: 36, height: 36, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f5f3' }}>
                       <img src={b.logo_url} alt={b.name} style={{ width: 22, height: 22, objectFit: 'contain' }} />
                     </div>
                   ))}
                 </div>
-                {hoveredBrand && (
-                  <div style={{ marginTop: '.5rem', padding: '.5rem .75rem', background: '#f9f9f7', borderRadius: 8, fontSize: '.82rem' }}>
-                    <strong>{hoveredBrand.name}</strong>
-                    {hoveredBrand.description && <span style={{ color: '#999' }}> — {hoveredBrand.description}</span>}
-                  </div>
-                )}
               </div>
             )}
 
@@ -170,27 +186,12 @@ export function SitesSlideshow() {
                   {storyOpen.talents.map(t => {
                     const Icon = getIcon(t.icon)
                     return (
-                      <div
-                        key={t.id}
-                        onMouseEnter={() => { setHoveredTalent(t); setHoveredBrand(null) }}
-                        onMouseLeave={() => setHoveredTalent(null)}
-                        style={{
-                          width: 36, height: 36, borderRadius: 8, display: 'flex',
-                          alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-                          background: '#111', transition: 'background .2s',
-                        }}
-                      >
+                      <div key={t.id} title={t.description ? `${t.title} — ${t.description}` : t.title} style={{ width: 36, height: 36, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111' }}>
                         <Icon size={18} color="#fff" strokeWidth={1.5} />
                       </div>
                     )
                   })}
                 </div>
-                {hoveredTalent && (
-                  <div style={{ marginTop: '.5rem', padding: '.5rem .75rem', background: '#f9f9f7', borderRadius: 8, fontSize: '.82rem' }}>
-                    <strong>{hoveredTalent.title}</strong>
-                    {hoveredTalent.description && <span style={{ color: '#999' }}> — {hoveredTalent.description}</span>}
-                  </div>
-                )}
               </div>
             )}
           </div>
