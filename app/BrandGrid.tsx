@@ -74,21 +74,22 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
   return (
     <>
       <div className="v2-clients-strip" style={{ minWidth: 0, width: '100%', position: 'relative', contain: 'layout style' }}>
-        {/* Toast confirmation */}
-        {flash && (
-          <div style={{
-            position: 'absolute', top: 8, left: '50%', transform: 'translateX(-50%)',
-            background: flash.action === 'added' ? 'rgba(22,163,74,.9)' : 'rgba(220,38,38,.85)',
-            color: '#fff', padding: '.35rem 1rem', borderRadius: 20,
-            fontSize: '.78rem', fontWeight: 600, zIndex: 20,
-            fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '.3px',
-            boxShadow: '0 4px 12px rgba(0,0,0,.3)',
-            animation: 'fadeIn .2s ease-out',
-            whiteSpace: 'nowrap',
+        {/* Toast confirmation — overlays top-right, no layout shift */}
+        <div style={{
+          position: 'absolute', top: 12, right: 0, zIndex: 20,
+          opacity: flash ? 1 : 0,
+          transition: 'opacity .3s ease-in-out',
+          pointerEvents: 'none',
+        }}>
+          <span style={{
+            color: 'rgba(255,255,255,.7)',
+            fontSize: '.75rem', fontWeight: 500,
+            fontFamily: "'Space Grotesk', sans-serif",
+            letterSpacing: '.3px',
           }}>
-            {flash.action === 'added' ? '✓ Added to your tech stack' : '✕ Removed from your tech stack'}
-          </div>
-        )}
+            {flash?.action === 'added' ? '✓ Added to your tech stack' : '✕ Removed from your tech stack'}
+          </span>
+        </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
           <p style={{ margin: 0, whiteSpace: 'nowrap' }}>Choose Your Tech</p>
           <div style={{ position: 'relative', flex: 1, maxWidth: 260 }}>
