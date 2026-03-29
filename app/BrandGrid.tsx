@@ -77,7 +77,22 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
 
   return (
     <>
-      <div className="v2-clients-strip" style={{ minWidth: 0, width: '100%' }}>
+      <div className="v2-clients-strip" style={{ minWidth: 0, width: '100%', position: 'relative' }}>
+        {/* Toast confirmation */}
+        {flash && (
+          <div style={{
+            position: 'absolute', top: 8, left: '50%', transform: 'translateX(-50%)',
+            background: flash.action === 'added' ? 'rgba(22,163,74,.9)' : 'rgba(220,38,38,.85)',
+            color: '#fff', padding: '.35rem 1rem', borderRadius: 20,
+            fontSize: '.78rem', fontWeight: 600, zIndex: 20,
+            fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '.3px',
+            boxShadow: '0 4px 12px rgba(0,0,0,.3)',
+            animation: 'fadeIn .2s ease-out',
+            whiteSpace: 'nowrap',
+          }}>
+            {flash.action === 'added' ? '✓ Added to your tech stack' : '✕ Removed from your tech stack'}
+          </div>
+        )}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
           <p style={{ margin: 0, whiteSpace: 'nowrap' }}>Choose Your Tech</p>
           <div style={{ position: 'relative', flex: 1, maxWidth: 260 }}>
@@ -182,17 +197,6 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
                 ) : t.logo_url ? (
                   <img src={t.logo_url} alt={t.name} style={{ width: 28, height: 28, objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
                 ) : null}
-                {flash?.id === t.id && (
-                  <span style={{
-                    position: 'absolute', bottom: -10, left: '50%', transform: 'translateX(-50%)',
-                    fontSize: '.6rem', fontWeight: 700, whiteSpace: 'nowrap',
-                    color: flash.action === 'added' ? '#4ade80' : '#f87171',
-                    opacity: 1, transition: 'opacity .8s',
-                    pointerEvents: 'none',
-                  }}>
-                    {flash.action === 'added' ? '✓ Added' : '✕ Removed'}
-                  </span>
-                )}
               </div>
             )
           })}
