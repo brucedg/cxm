@@ -57,8 +57,8 @@ export function SitesSlideshow() {
   return (
     <>
       <div
-        onMouseEnter={() => { if (timerRef.current) clearInterval(timerRef.current) }}
-        onMouseLeave={() => { if (sites.length > 1) timerRef.current = setInterval(() => setCurrent(c => (c + 1) % sites.length), 5000) }}
+        onMouseEnter={() => { if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null } }}
+        onMouseLeave={() => { if (sites.length > 1 && !timerRef.current) timerRef.current = setInterval(() => fadeTo(c => (c + 1) % sites.length), 6000) }}
         style={{
           position: 'relative', width: '100%', maxWidth: '404px', borderRadius: 12, overflow: 'hidden',
           aspectRatio: '16/10', cursor: 'pointer',
