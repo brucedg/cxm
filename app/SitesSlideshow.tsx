@@ -13,20 +13,32 @@ export function SitesSlideshow() {
   const [sites, setSites] = useState<Site[]>([])
   const [current, setCurrent] = useState(0)
   const [storyOpen, setStoryOpen] = useState<Site | null>(null)
-  const [fading, setFading] = useState(false)
+  const [fadePhase, setFadePhase] = useState<'visible' | 'fading-out' | 'black' | 'fading-in'>('visible')
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const transitionBusy = useRef(false)
 
   useEffect(() => {
     fetch('/api/sites').then(r => r.json()).then((all: Site[]) => setSites(all.filter(s => s.visible && s.image_url))).catch(() => {})
   }, [])
 
   const fadeTo = (getNext: (prev: number) => number) => {
-    if (fading) return
-    setFading(true)
+    if (transitionBusy.current) return
+    transitionBusy.current = true
+    // Phase 1: fade to black (1.2s)
+    setFadePhase('fading-out')
     setTimeout(() => {
+      // Phase 2: hold black, swap image
+      setFadePhase('black')
       setCurrent(getNext)
-      setTimeout(() => setFading(false), 50)
-    }, 1000)
+      // Phase 3: small pause then fade in (1.2s)
+      setTimeout(() => {
+        setFadePhase('fading-in')
+        setTimeout(() => {
+          setFadePhase('visible')
+          transitionBusy.current = false
+        }, 1200)
+      }, 150)
+    }, 1200)
   }
 
   // Auto-rotate
@@ -34,9 +46,9 @@ export function SitesSlideshow() {
     if (sites.length <= 1) return
     timerRef.current = setInterval(() => {
       fadeTo(c => (c + 1) % sites.length)
-    }, 5000)
+    }, 6000)
     return () => { if (timerRef.current) clearInterval(timerRef.current) }
-  }, [sites.length, fading])
+  }, [sites.length])
 
   if (sites.length === 0) return null
 
@@ -70,8 +82,8 @@ export function SitesSlideshow() {
         <div style={{
           position: 'absolute', inset: 0,
           background: '#000',
-          opacity: fading ? 1 : 0,
-          transition: 'opacity 1s ease-in-out',
+          opacity: fadePhase === 'fading-out' || fadePhase === 'black' ? 1 : 0,
+          transition: 'opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
           pointerEvents: 'none',
           zIndex: 3,
         }} />
