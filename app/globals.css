@@ -60,6 +60,18 @@ body {
   display: flex;
   align-items: flex-start;
   border-bottom: 1px solid #e8e8e4;
+  position: relative;
+}
+.v2-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 300px;
+  background: linear-gradient(to bottom, transparent, rgba(0,0,0,.6));
+  pointer-events: none;
+  z-index: 0;
 }
 .v2-hero-inner {
   width: 100%;
@@ -67,6 +79,8 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 80px;
   align-items: start;
+  position: relative;
+  z-index: 1;
 }
 .v2-tag {
   display: inline-block;
