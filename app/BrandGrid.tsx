@@ -128,7 +128,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   borderRadius: 10,
                   background: isSelected ? 'rgba(37,99,235,.35)' : 'rgba(255,255,255,.1)',
-                  border: isSelected ? '2px solid rgba(37,99,235,.7)' : '1.5px solid rgba(255,255,255,.3)',
+                  border: isSelected ? '2px solid rgba(37,99,235,.7)' : '1.5px solid rgba(255,255,255,.45)',
                   cursor: 'pointer',
                   transition: 'all .2s',
                   boxShadow: isSelected ? '0 0 12px rgba(37,99,235,.2)' : 'none',
