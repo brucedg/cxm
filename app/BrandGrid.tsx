@@ -10,13 +10,16 @@ type Technology = {
 
 export function BrandGrid({ techIds }: { techIds?: number[] }) {
   const [techs, setTechs] = useState<Technology[]>([])
+  const [allTechs, setAllTechs] = useState<Technology[]>([])
   const [selected, setSelected] = useState<Set<number>>(new Set())
+  const [search, setSearch] = useState('')
   const [hovered, setHovered] = useState<Technology | null>(null)
   const [pos, setPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     fetch('/api/technologies').then(r => r.json()).then((all: Technology[]) => {
+      setAllTechs(all)
       if (techIds && techIds.length > 0) {
         const techMap = new Map(all.map(t => [t.id, t]))
         setTechs(techIds.map(id => techMap.get(id)).filter(Boolean) as Technology[])
@@ -75,7 +78,20 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
   return (
     <>
       <div className="v2-clients-strip">
-        <p>Technology</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+          <p style={{ margin: 0, whiteSpace: 'nowrap' }}>Choose Your Tech</p>
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search technologies..."
+            style={{
+              flex: 1, maxWidth: 240, padding: '.35rem .7rem', borderRadius: 6,
+              border: '1px solid rgba(255,255,255,.15)', background: 'rgba(255,255,255,.08)',
+              color: '#fff', fontSize: '.78rem', outline: 'none', fontFamily: 'inherit',
+            }}
+          />
+        </div>
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(7, 1fr)',
@@ -83,7 +99,13 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
           alignItems: 'center',
           justifyItems: 'center',
         }}>
-          {techs.map(t => {
+          {(search.trim()
+            ? allTechs.filter(t => {
+                const q = search.toLowerCase()
+                return t.name.toLowerCase().includes(q) || (t.categories || []).some(c => c.toLowerCase().includes(q))
+              })
+            : techs
+          ).map(t => {
             const isSelected = selected.has(t.id)
             return (
               <div
@@ -205,10 +227,22 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
             </div>
           )}
           {hovered.description && (
-            <p style={{ fontSize: '.82rem', color: '#666', lineHeight: 1.5 }}>
+            <p style={{ fontSize: '.82rem', color: '#666', lineHeight: 1.5, marginBottom: '.5rem' }}>
               {hovered.description}
             </p>
           )}
+          <button
+            onClick={() => { toggle(hovered); setHovered(null) }}
+            style={{
+              display: 'block', width: '100%', marginTop: '.5rem',
+              padding: '.4rem', borderRadius: 6, border: 'none',
+              background: selected.has(hovered.id) ? '#dc2626' : '#2563eb',
+              color: '#fff', fontSize: '.78rem', fontWeight: 600, cursor: 'pointer',
+              transition: 'background .15s',
+            }}
+          >
+            {selected.has(hovered.id) ? 'Remove from my stack' : '+ Add to my stack'}
+          </button>
           <div style={{
             position: 'absolute', bottom: -6, left: '50%', transform: 'translateX(-50%) rotate(45deg)',
             width: 12, height: 12, background: '#fff',
