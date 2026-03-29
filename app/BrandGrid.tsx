@@ -13,7 +13,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
   const [allTechs, setAllTechs] = useState<Technology[]>([])
   const [selected, setSelected] = useState<Set<number>>(new Set())
   const [search, setSearch] = useState('')
-  const [flash, setFlash] = useState<{ id: number; action: 'added' | 'removed' } | null>(null)
+  const [flash, setFlash] = useState<{ id: number; action: 'added' | 'removed'; x: number; y: number } | null>(null)
   const [hovered, setHovered] = useState<Technology | null>(null)
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -41,7 +41,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
     localStorage.setItem('cxm-your-tech', JSON.stringify([...selected]))
   }, [selected])
 
-  const toggle = useCallback((tech: Technology) => {
+  const toggle = useCallback((tech: Technology, x?: number, y?: number) => {
     hasEdited.current = true
     const wasSelected = selected.has(tech.id)
     setSelected(prev => {
@@ -54,9 +54,8 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
       }
       return next
     })
-    setFlash({ id: tech.id, action: wasSelected ? 'removed' : 'added' })
+    setFlash({ id: tech.id, action: wasSelected ? 'removed' : 'added', x: x || 0, y: y || 0 })
     setTimeout(() => setFlash(null), 1200)
-    // If adding from search results, clear search to return to main grid
     if (!wasSelected && search.trim()) setSearch('')
   }, [selected, search])
 
@@ -74,22 +73,24 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
   return (
     <>
       <div className="v2-clients-strip" style={{ minWidth: 0, width: '100%', position: 'relative', contain: 'layout style' }}>
-        {/* Toast confirmation — overlays top-right, no layout shift */}
-        <div style={{
-          position: 'absolute', top: 12, right: 0, zIndex: 20,
-          opacity: flash ? 1 : 0,
-          transition: 'opacity .3s ease-in-out',
-          pointerEvents: 'none',
-        }}>
-          <span style={{
-            color: 'rgba(255,255,255,.7)',
-            fontSize: '.75rem', fontWeight: 500,
-            fontFamily: "'Space Grotesk', sans-serif",
-            letterSpacing: '.3px',
+        {/* Toast confirmation — follows cursor */}
+        {flash && (
+          <div style={{
+            position: 'fixed', left: flash.x + 12, top: flash.y + 12, zIndex: 20,
+            opacity: flash ? 1 : 0,
+            transition: 'opacity .3s ease-in-out',
+            pointerEvents: 'none',
           }}>
-            {flash?.action === 'added' ? '✓ Added to your tech stack' : '✕ Removed from your tech stack'}
-          </span>
-        </div>
+            <span style={{
+              color: 'rgba(255,255,255,.8)',
+              fontSize: '.72rem', fontWeight: 500,
+              fontFamily: "'Space Grotesk', sans-serif",
+              whiteSpace: 'nowrap',
+            }}>
+              {flash.action === 'added' ? '✓ Added' : '✕ Removed'}
+            </span>
+          </div>
+        )}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
           <p style={{ margin: 0, whiteSpace: 'nowrap' }}>Choose Your Tech</p>
           <div style={{ position: 'relative', flex: 1, maxWidth: 260 }}>
@@ -154,11 +155,12 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
           })().map(t => {
             const isSelected = selected.has(t.id)
             const isSearching = search.trim().length >= 2
-            const showColor = isSelected || isSearching
+            const isHovered = hovered?.id === t.id
+            const showColor = isSelected || isSearching || isHovered
             return (
               <div
                 key={t.id}
-                onClick={() => toggle(t)}
+                onClick={e => { toggle(t, e.clientX, e.clientY) }}
                 onMouseEnter={e => {
                   const el = e.currentTarget
                   showTech(t)
