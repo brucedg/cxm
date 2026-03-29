@@ -186,7 +186,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
                   if (!isSelected) {
                     el.style.background = isSearching ? 'rgba(90,95,110,.75)' : 'rgba(255,255,255,.15)'
                     el.style.transform = 'translateY(-2px)'
-                    el.style.boxShadow = '0 4px 12px rgba(0,0,0,.15)'
+                    el.style.boxShadow = isSearching ? '0 4px 14px rgba(255,255,255,.08)' : '0 4px 12px rgba(0,0,0,.15)'
                   }
                 }}
                 onMouseLeave={e => {
