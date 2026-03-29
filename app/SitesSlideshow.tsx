@@ -72,10 +72,10 @@ export function SitesSlideshow() {
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
 
-        {/* Gradient overlay */}
+        {/* Gradient overlay — top banner */}
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(to top, rgba(0,0,0,.7) 0%, rgba(0,0,0,.1) 50%, transparent 100%)',
+          background: 'linear-gradient(to bottom, rgba(0,0,0,.65) 0%, rgba(0,0,0,.2) 25%, transparent 50%)',
         }} />
 
         {/* Fade to black overlay */}
@@ -88,32 +88,38 @@ export function SitesSlideshow() {
           zIndex: 3,
         }} />
 
-        {/* Title */}
-        <div style={{ position: 'absolute', bottom: 16, left: 16, right: 60 }}>
+        {/* Top banner: title + info button */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, zIndex: 5,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '12px 14px',
+        }}>
           <h4 style={{
-            fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.1rem',
-            fontWeight: 700, color: '#fff', textShadow: '0 1px 6px rgba(0,0,0,.5)',
+            fontFamily: "'Space Grotesk', sans-serif", fontSize: '.95rem',
+            fontWeight: 700, color: '#fff', letterSpacing: '.3px',
+            textShadow: '0 1px 4px rgba(0,0,0,.4)',
+            margin: 0,
           }}>
             {site.title}
           </h4>
+          <button
+            onClick={() => setStoryOpen(site)}
+            title="What's the story?"
+            style={{
+              width: 26, height: 26, borderRadius: '50%', flexShrink: 0,
+              background: 'rgba(255,255,255,.2)', backdropFilter: 'blur(4px)',
+              border: '1px solid rgba(255,255,255,.25)', color: '#fff',
+              fontSize: '.8rem', fontWeight: 700, fontStyle: 'italic', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontFamily: 'Georgia, serif',
+              transition: 'background .2s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(37,99,235,.8)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,.2)'}
+          >
+            i
+          </button>
         </div>
-
-        {/* Info button */}
-        <button
-          onClick={() => setStoryOpen(site)}
-          title="What's the story?"
-          style={{
-            position: 'absolute', top: 10, right: 10, zIndex: 5,
-            width: 28, height: 28, borderRadius: '50%',
-            background: '#2563eb', border: 'none', color: '#fff',
-            fontSize: '.85rem', fontWeight: 700, fontStyle: 'italic', cursor: 'pointer',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 2px 8px rgba(0,0,0,.3)',
-            fontFamily: 'Georgia, serif',
-          }}
-        >
-          i
-        </button>
 
         {/* Prev/Next arrows */}
         {sites.length > 1 && (
