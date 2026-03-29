@@ -203,10 +203,10 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   borderRadius: 10,
                   background: isSelected ? 'rgba(45,50,65,.85)' : 'rgba(255,255,255,.1)',
-                  border: isSelected ? '2px solid rgba(100,160,255,.9)' : '1.5px solid rgba(255,255,255,.45)',
+                  border: isSelected ? '1.5px solid rgba(255,255,255,.35)' : '1.5px solid rgba(255,255,255,.45)',
                   cursor: 'pointer',
                   transition: 'all .2s',
-                  boxShadow: isSelected ? '0 0 16px rgba(37,99,235,.4), inset 0 0 8px rgba(100,160,255,.15)' : 'none',
+                  boxShadow: isSelected ? '0 0 10px rgba(255,255,255,.1)' : 'none',
                   transform: isSelected ? 'scale(1.1)' : 'scale(1)',
                 }}
               >
