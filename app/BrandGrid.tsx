@@ -78,19 +78,34 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
       <div className="v2-clients-strip">
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
           <p style={{ margin: 0, whiteSpace: 'nowrap' }}>Choose Your Tech</p>
-          <input
-            type="text"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Search"
-            className="tech-search-input"
-            style={{
-              flex: 1, maxWidth: 260, padding: '.4rem .75rem', borderRadius: 8,
-              border: '2px solid rgba(255,255,255,.6)', background: 'rgba(255,255,255,.2)',
-              color: '#fff', fontSize: '.82rem', outline: 'none',
-              fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '.3px',
-            }}
-          />
+          <div style={{ position: 'relative', flex: 1, maxWidth: 260 }}>
+            <input
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search"
+              className="tech-search-input"
+              style={{
+                width: '100%', padding: '.4rem .75rem', paddingRight: search ? '2rem' : '.75rem',
+                borderRadius: 8,
+                border: '2px solid rgba(255,255,255,.6)', background: 'rgba(255,255,255,.2)',
+                color: '#fff', fontSize: '.82rem', outline: 'none',
+                fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '.3px',
+              }}
+            />
+            {search && (
+              <button
+                onClick={() => setSearch('')}
+                style={{
+                  position: 'absolute', right: 6, top: '50%', transform: 'translateY(-50%)',
+                  width: 20, height: 20, borderRadius: '50%', border: 'none',
+                  background: 'rgba(255,255,255,.3)', color: '#fff',
+                  fontSize: '.65rem', cursor: 'pointer', display: 'flex',
+                  alignItems: 'center', justifyContent: 'center', lineHeight: 1,
+                }}
+              >✕</button>
+            )}
+          </div>
         </div>
         <div style={{
           display: 'grid',
@@ -98,14 +113,28 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
           gap: '16px',
           alignItems: 'center',
           justifyItems: 'center',
+          maxHeight: search.trim() ? '320px' : 'none',
+          overflowY: search.trim() ? 'auto' : 'visible',
+          transition: 'max-height .3s',
         }}>
-          {(search.trim()
-            ? allTechs.filter(t => {
-                const q = search.toLowerCase()
-                return t.name.toLowerCase().includes(q) || (t.categories || []).some(c => c.toLowerCase().includes(q))
-              })
-            : techs
-          ).map(t => {
+          {(() => {
+            let displayTechs: Technology[]
+            if (search.trim() && search.trim().length >= 2) {
+              const q = search.toLowerCase()
+              displayTechs = allTechs.filter(t =>
+                t.name.toLowerCase().includes(q) || (t.categories || []).some(c => c.toLowerCase().includes(q))
+              )
+            } else if (search.trim().length === 1) {
+              // Single char — don't search yet, show featured
+              displayTechs = techs
+            } else {
+              // No search — show featured with selected ones first
+              const selectedList = techs.filter(t => selected.has(t.id))
+              const unselectedList = techs.filter(t => !selected.has(t.id))
+              displayTechs = [...selectedList, ...unselectedList]
+            }
+            return displayTechs
+          })().map(t => {
             const isSelected = selected.has(t.id)
             return (
               <div
