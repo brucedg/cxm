@@ -75,7 +75,7 @@ export function SitesSlideshow() {
         {/* Gradient overlay — top banner */}
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(to bottom, rgba(0,0,0,.65) 0%, rgba(0,0,0,.2) 25%, transparent 50%)',
+          background: 'linear-gradient(to bottom, rgba(0,0,0,.85) 0%, rgba(0,0,0,.4) 30%, transparent 55%)',
         }} />
 
         {/* Fade to black overlay */}
