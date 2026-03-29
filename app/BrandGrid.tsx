@@ -85,7 +85,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
             placeholder="Search technologies..."
             style={{
               flex: 1, maxWidth: 260, padding: '.4rem .75rem', borderRadius: 8,
-              border: '1.5px solid rgba(255,255,255,.4)', background: 'rgba(255,255,255,.12)',
+              border: '2px solid rgba(255,255,255,.6)', background: 'rgba(255,255,255,.2)',
               color: '#fff', fontSize: '.82rem', outline: 'none',
               fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '.3px',
             }}
