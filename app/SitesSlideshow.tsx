@@ -13,18 +13,30 @@ export function SitesSlideshow() {
   const [sites, setSites] = useState<Site[]>([])
   const [current, setCurrent] = useState(0)
   const [storyOpen, setStoryOpen] = useState<Site | null>(null)
+  const [fading, setFading] = useState(false)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
     fetch('/api/sites').then(r => r.json()).then((all: Site[]) => setSites(all.filter(s => s.visible && s.image_url))).catch(() => {})
   }, [])
 
+  const fadeTo = (getNext: (prev: number) => number) => {
+    if (fading) return
+    setFading(true)
+    setTimeout(() => {
+      setCurrent(getNext)
+      setTimeout(() => setFading(false), 50)
+    }, 400)
+  }
+
   // Auto-rotate
   useEffect(() => {
     if (sites.length <= 1) return
-    timerRef.current = setInterval(() => setCurrent(c => (c + 1) % sites.length), 5000)
+    timerRef.current = setInterval(() => {
+      fadeTo(c => (c + 1) % sites.length)
+    }, 5000)
     return () => { if (timerRef.current) clearInterval(timerRef.current) }
-  }, [sites.length])
+  }, [sites.length, fading])
 
   if (sites.length === 0) return null
 
@@ -45,13 +57,23 @@ export function SitesSlideshow() {
         <img
           src={site.image_url.replace('/upload/', '/upload/w_800,h_500,c_fill/')}
           alt={site.title}
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'opacity .5s' }}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
 
-        {/* Overlay */}
+        {/* Gradient overlay */}
         <div style={{
           position: 'absolute', inset: 0,
           background: 'linear-gradient(to top, rgba(0,0,0,.7) 0%, rgba(0,0,0,.1) 50%, transparent 100%)',
+        }} />
+
+        {/* Fade to black overlay */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: '#000',
+          opacity: fading ? 1 : 0,
+          transition: 'opacity .4s ease-in-out',
+          pointerEvents: 'none',
+          zIndex: 3,
         }} />
 
         {/* Title */}
@@ -85,7 +107,7 @@ export function SitesSlideshow() {
         {sites.length > 1 && (
           <>
             <button
-              onClick={(e) => { e.stopPropagation(); setCurrent(c => (c - 1 + sites.length) % sites.length) }}
+              onClick={(e) => { e.stopPropagation(); fadeTo(c => (c - 1 + sites.length) % sites.length) }}
               style={{
                 position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)', zIndex: 5,
                 width: 28, height: 28, borderRadius: '50%', border: 'none',
@@ -96,7 +118,7 @@ export function SitesSlideshow() {
               ‹
             </button>
             <button
-              onClick={(e) => { e.stopPropagation(); setCurrent(c => (c + 1) % sites.length) }}
+              onClick={(e) => { e.stopPropagation(); fadeTo(c => (c + 1) % sites.length) }}
               style={{
                 position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', zIndex: 5,
                 width: 28, height: 28, borderRadius: '50%', border: 'none',
