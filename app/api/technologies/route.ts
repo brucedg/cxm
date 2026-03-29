@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getDb } from '@/lib/db'
 import { checkAuth } from '@/lib/auth'
-import { sanitizeSvg } from '@/lib/sanitize-svg'
+
+// Lazy-load sanitizer only for write operations (jsdom is heavy)
+async function getSanitizer() {
+  const { sanitizeSvg } = await import('@/lib/sanitize-svg')
+  return sanitizeSvg
+}
 
 // GET — public list with optional category/search filtering
 export async function GET(request: NextRequest) {
@@ -72,6 +77,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Name is required' }, { status: 400 })
   }
 
+  const sanitizeSvg = await getSanitizer()
   const cleanSvg = svg_logo ? sanitizeSvg(svg_logo) : ''
   const sql = getDb()
   const [row] = await sql`
@@ -104,6 +110,7 @@ export async function PATCH(request: NextRequest) {
   }
 
   const cats = categories || (category ? [category] : [])
+  const sanitizeSvg = await getSanitizer()
   const cleanSvg = svg_logo ? sanitizeSvg(svg_logo) : ''
   const cleanSvgColor = svg_logo_color ? sanitizeSvg(svg_logo_color) : ''
   const sql = getDb()
