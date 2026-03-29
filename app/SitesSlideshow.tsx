@@ -107,15 +107,15 @@ export function SitesSlideshow() {
             title="What's the story?"
             style={{
               width: 26, height: 26, borderRadius: '50%', flexShrink: 0,
-              background: 'rgba(255,255,255,.2)', backdropFilter: 'blur(4px)',
-              border: '1px solid rgba(255,255,255,.25)', color: '#fff',
+              background: 'rgba(37,99,235,.7)', backdropFilter: 'blur(4px)',
+              border: '1px solid rgba(255,255,255,.3)', color: '#fff',
               fontSize: '.8rem', fontWeight: 700, fontStyle: 'italic', cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontFamily: 'Georgia, serif',
               transition: 'background .2s',
             }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(37,99,235,.8)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,.2)'}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(37,99,235,.95)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(37,99,235,.7)'}
           >
             i
           </button>
