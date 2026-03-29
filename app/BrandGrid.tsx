@@ -115,7 +115,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
           gap: '16px',
           alignItems: 'start',
           justifyItems: 'center',
-          height: 320,
+          height: 520,
           width: '100%',
           overflowY: 'scroll',
           alignContent: 'start',
