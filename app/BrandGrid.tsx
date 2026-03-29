@@ -201,7 +201,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
                 style={{
                   width: 56, height: 56,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  borderRadius: 10,
+                  borderRadius: isSelected ? 14 : 10,
                   background: isSelected
                     ? 'linear-gradient(to bottom, rgba(60,65,80,.9), rgba(35,38,50,.95))'
                     : 'rgba(255,255,255,.1)',
