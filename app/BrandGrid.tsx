@@ -199,12 +199,16 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
           })}
         </div>
 
-        {/* Info bar — fixed position below grid */}
+        {/* Info bar — overlay on bottom third of grid */}
         <div style={{
-          height: 56, marginTop: '.5rem',
+          position: 'absolute', bottom: 80, left: 0, right: 0, zIndex: 5,
+          height: 70,
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.75rem',
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,.85) 30%, rgba(0,0,0,.95))',
+          padding: '0 1rem',
           transition: 'opacity .2s',
           opacity: hovered ? 1 : 0,
+          pointerEvents: hovered ? 'auto' : 'none',
         }}>
           {hovered && (
             <>
