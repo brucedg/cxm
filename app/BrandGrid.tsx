@@ -26,17 +26,11 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
       } else {
         setTechs(all)
       }
-      // If user has edited before, restore their selections; otherwise pre-select featured
+      // Restore user's selections from localStorage (no pre-selection)
       try {
         const stored = localStorage.getItem('cxm-your-tech')
-        if (stored) {
-          setSelected(new Set(JSON.parse(stored)))
-        } else if (techIds && techIds.length > 0) {
-          setSelected(new Set(techIds))
-        }
-      } catch {
-        if (techIds && techIds.length > 0) setSelected(new Set(techIds))
-      }
+        if (stored) setSelected(new Set(JSON.parse(stored)))
+      } catch { /* ignore */ }
     }).catch(() => {})
   }, [techIds])
 
