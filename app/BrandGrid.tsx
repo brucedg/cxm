@@ -184,7 +184,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
                   const el = e.currentTarget
                   showTech(t)
                   if (!isSelected) {
-                    el.style.background = isSearching ? 'rgba(60,65,80,.9)' : 'rgba(255,255,255,.15)'
+                    el.style.background = isSearching ? 'rgba(90,95,110,.75)' : 'rgba(255,255,255,.15)'
                     el.style.transform = 'translateY(-2px)'
                     el.style.boxShadow = '0 4px 12px rgba(0,0,0,.15)'
                   }
@@ -193,7 +193,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
                   startHide()
                   const el = e.currentTarget
                   if (!isSelected) {
-                    el.style.background = isSearching ? 'rgba(50,55,70,.8)' : 'rgba(255,255,255,.1)'
+                    el.style.background = isSearching ? 'rgba(80,85,100,.7)' : 'rgba(255,255,255,.1)'
                     el.style.transform = 'translateY(0)'
                     el.style.boxShadow = 'none'
                   }
@@ -204,7 +204,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
                   borderRadius: isSelected ? 14 : 10,
                   background: isSelected
                     ? 'linear-gradient(to bottom, rgba(60,65,80,.9), rgba(35,38,50,.95))'
-                    : isSearching ? 'rgba(50,55,70,.8)' : 'rgba(255,255,255,.1)',
+                    : isSearching ? 'rgba(80,85,100,.7)' : 'rgba(255,255,255,.1)',
                   border: isSelected ? '1px solid rgba(255,255,255,.2)' : '1.5px solid rgba(255,255,255,.45)',
                   borderTop: isSelected ? '1px solid rgba(255,255,255,.3)' : undefined,
                   borderBottom: isSelected ? '1px solid rgba(0,0,0,.3)' : undefined,
