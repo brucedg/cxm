@@ -225,14 +225,16 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
                     return null
                   }
 
+                  const opaqueStyle = { width: 28, height: 28, opacity: 1, filter: 'drop-shadow(0 0 1px rgba(255,255,255,.3))' }
+
                   // Colour SVG exists and is safe to show (not too dark, not white-heavy)
                   if (t.svg_logo_color && !brandDark && !hasWhiteFill) {
-                    return <div style={{ width: 28, height: 28 }} dangerouslySetInnerHTML={{ __html: t.svg_logo_color }} />
+                    return <div style={opaqueStyle} dangerouslySetInnerHTML={{ __html: t.svg_logo_color }} />
                   }
 
                   // Fallback: monochrome with brand tint (light blue for dark brands)
                   const tint = brandDark ? '#a0c4ff' : (t.color || '#fff')
-                  if (t.svg_logo) return <div style={{ width: 28, height: 28, color: tint }} dangerouslySetInnerHTML={{ __html: t.svg_logo }} />
+                  if (t.svg_logo) return <div style={{ ...opaqueStyle, color: tint }} dangerouslySetInnerHTML={{ __html: t.svg_logo }} />
                   return null
                 })()}
               </div>
