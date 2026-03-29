@@ -225,7 +225,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
                     return null
                   }
 
-                  const opaqueStyle = { width: 28, height: 28, opacity: 1, filter: 'drop-shadow(0 0 3px rgba(255,255,255,.6)) drop-shadow(0 0 8px rgba(255,255,255,.25)) brightness(1.3)' }
+                  const opaqueStyle = { width: 28, height: 28, opacity: 1 }
 
                   // Colour SVG exists and is safe to show (not too dark, not white-heavy)
                   if (t.svg_logo_color && !brandDark && !hasWhiteFill) {
