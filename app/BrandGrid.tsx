@@ -210,18 +210,31 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
                   transform: isSelected ? 'scale(1.05)' : 'scale(1)',
                 }}
               >
-                {showColor && (t.svg_logo_color || t.svg_logo) ? (
-                  isDark(t.color) ? (
-                    // Dark brand colour — show monochrome with a lighter tint instead of invisible colour SVG
-                    <div style={{ width: 28, height: 28, color: '#a0c4ff' }} dangerouslySetInnerHTML={{ __html: t.svg_logo }} />
-                  ) : (
-                    <div style={{ width: 28, height: 28, color: t.svg_logo_color ? undefined : (t.color || '#fff') }} dangerouslySetInnerHTML={{ __html: t.svg_logo_color || t.svg_logo }} />
+                {(() => {
+                  const hasWhiteFill = t.svg_logo_color && (
+                    t.svg_logo_color.includes('fill="#fff') || t.svg_logo_color.includes('fill="#FFF') ||
+                    t.svg_logo_color.includes("fill='#fff") || t.svg_logo_color.includes('fill="white"') ||
+                    t.svg_logo_color.includes('fill="#ffffff') || t.svg_logo_color.includes('fill="#FFFFFF')
                   )
-                ) : t.svg_logo ? (
-                  <div style={{ width: 28, height: 28, color: '#fff' }} dangerouslySetInnerHTML={{ __html: t.svg_logo }} />
-                ) : t.logo_url ? (
-                  <img src={t.logo_url} alt={t.name} style={{ width: 28, height: 28, objectFit: 'contain', filter: showColor ? 'none' : 'brightness(0) invert(1)' }} />
-                ) : null}
+                  const brandDark = isDark(t.color)
+
+                  if (!showColor) {
+                    // Default: white monochrome
+                    if (t.svg_logo) return <div style={{ width: 28, height: 28, color: '#fff' }} dangerouslySetInnerHTML={{ __html: t.svg_logo }} />
+                    if (t.logo_url) return <img src={t.logo_url} alt={t.name} style={{ width: 28, height: 28, objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
+                    return null
+                  }
+
+                  // Colour SVG exists and is safe to show (not too dark, not white-heavy)
+                  if (t.svg_logo_color && !brandDark && !hasWhiteFill) {
+                    return <div style={{ width: 28, height: 28 }} dangerouslySetInnerHTML={{ __html: t.svg_logo_color }} />
+                  }
+
+                  // Fallback: monochrome with brand tint (light blue for dark brands)
+                  const tint = brandDark ? '#a0c4ff' : (t.color || '#fff')
+                  if (t.svg_logo) return <div style={{ width: 28, height: 28, color: tint }} dangerouslySetInnerHTML={{ __html: t.svg_logo }} />
+                  return null
+                })()}
               </div>
             )
           })}
