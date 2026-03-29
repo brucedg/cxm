@@ -85,7 +85,7 @@ export function SitesSlideshow() {
           opacity: fadePhase === 'fading-out' || fadePhase === 'black' ? 1 : 0,
           transition: 'opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
           pointerEvents: 'none',
-          zIndex: 3,
+          zIndex: 10,
         }} />
 
         {/* Top banner: title + info button */}
