@@ -284,9 +284,12 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
         </div>
         </div>
 
-        {/* CTA when techs selected */}
-        {selected.size > 0 && (
-          <div style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.75rem' }}>
+        {/* CTA — always rendered, fades in/out */}
+        <div style={{
+          marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.75rem',
+          height: 36, opacity: selected.size > 0 ? 1 : 0, transition: 'opacity .3s',
+          pointerEvents: selected.size > 0 ? 'auto' : 'none',
+        }}>
             <button
               onClick={() => {
                 trackEvent('your_tech_submitted', { tech_count: selected.size, techs: selectedTechs.map(t => t.name).join(', ') })
@@ -314,7 +317,6 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
               Clear
             </button>
           </div>
-        )}
       </div>
 
     </>
