@@ -139,16 +139,13 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
         }}>
           {(() => {
             let displayTechs: Technology[]
-            if (search.trim() && search.trim().length >= 2) {
+            if (search.trim().length >= 2) {
               const q = search.toLowerCase()
               displayTechs = allTechs.filter(t =>
                 t.name.toLowerCase().includes(q) || (t.categories || []).some(c => c.toLowerCase().includes(q))
               )
-            } else if (search.trim().length === 1) {
-              // Single char — don't search yet, show featured
-              displayTechs = techs
             } else {
-              // No search — show all techs, selected first, then featured, then rest
+              // Default + single char — same list, no shift
               const selectedList = allTechs.filter(t => selected.has(t.id))
               const featuredUnselected = techs.filter(t => !selected.has(t.id))
               const restIds = new Set([...selected, ...techs.map(t => t.id)])
