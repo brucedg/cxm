@@ -192,10 +192,12 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
                   transform: isSelected ? 'scale(1.05)' : 'scale(1)',
                 }}
               >
-                {t.svg_logo ? (
+                {isSelected && (t.svg_logo_color || t.svg_logo) ? (
+                  <div style={{ width: 28, height: 28, color: t.svg_logo_color ? undefined : (t.color || '#fff') }} dangerouslySetInnerHTML={{ __html: t.svg_logo_color || t.svg_logo }} />
+                ) : t.svg_logo ? (
                   <div style={{ width: 28, height: 28, color: '#fff' }} dangerouslySetInnerHTML={{ __html: t.svg_logo }} />
                 ) : t.logo_url ? (
-                  <img src={t.logo_url} alt={t.name} style={{ width: 28, height: 28, objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
+                  <img src={t.logo_url} alt={t.name} style={{ width: 28, height: 28, objectFit: 'contain', filter: isSelected ? 'none' : 'brightness(0) invert(1)' }} />
                 ) : null}
               </div>
             )
