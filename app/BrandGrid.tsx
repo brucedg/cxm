@@ -249,8 +249,8 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
         {/* Info bar — overlay on bottom third of grid */}
         <div style={{
           position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 5,
-          height: 80,
-          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.75rem',
+          height: 160,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem',
           background: 'linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,.85) 30%, rgba(0,0,0,.95))',
           padding: '0 1rem',
           transition: 'opacity .2s',
@@ -261,24 +261,24 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
             <>
               {(hovered.svg_logo_color || hovered.svg_logo) && (
                 <div
-                  style={{ width: 32, height: 32, flexShrink: 0, color: hovered.svg_logo_color ? undefined : (hovered.color || '#fff') }}
+                  style={{ width: 48, height: 48, flexShrink: 0, color: hovered.svg_logo_color ? undefined : (hovered.color || '#fff') }}
                   dangerouslySetInnerHTML={{ __html: hovered.svg_logo_color || hovered.svg_logo }}
                 />
               )}
               <div style={{ minWidth: 0 }}>
                 <span style={{
-                  fontFamily: "'Space Grotesk', sans-serif", fontSize: '.9rem',
+                  fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.2rem',
                   fontWeight: 700, color: '#fff', marginRight: '.5rem',
                 }}>
                   {hovered.name}
                 </span>
                 {hovered.categories?.length > 0 && (
-                  <span style={{ fontSize: '.7rem', color: 'rgba(255,255,255,.5)' }}>
+                  <span style={{ fontSize: '.85rem', color: 'rgba(255,255,255,.5)' }}>
                     {hovered.categories.join(' · ')}
                   </span>
                 )}
                 {hovered.description && (
-                  <p style={{ fontSize: '.75rem', color: 'rgba(255,255,255,.6)', lineHeight: 1.4, margin: '.1rem 0 0' }}>
+                  <p style={{ fontSize: '.9rem', color: 'rgba(255,255,255,.6)', lineHeight: 1.5, margin: '.25rem 0 0' }}>
                     {hovered.description}
                   </p>
                 )}
