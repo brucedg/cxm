@@ -57,7 +57,9 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
     })
     setFlash({ id: tech.id, action: wasSelected ? 'removed' : 'added' })
     setTimeout(() => setFlash(null), 1200)
-  }, [selected])
+    // If adding from search results, clear search to return to main grid
+    if (!wasSelected && search.trim()) setSearch('')
+  }, [selected, search])
 
   const showTech = (t: Technology, el: HTMLElement) => {
     if (hideTimer.current) clearTimeout(hideTimer.current)
