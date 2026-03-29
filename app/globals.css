@@ -138,6 +138,8 @@ body {
   margin-top: -40px;
   padding-top: 60px;
   border-top: 1px solid rgba(255,255,255,.15);
+  min-width: 0;
+  flex-shrink: 0;
 }
 .v2-clients-strip p {
   font-family: 'Space Grotesk', sans-serif;

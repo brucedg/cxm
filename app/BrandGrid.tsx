@@ -77,7 +77,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
 
   return (
     <>
-      <div className="v2-clients-strip">
+      <div className="v2-clients-strip" style={{ minWidth: 0, width: '100%' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
           <p style={{ margin: 0, whiteSpace: 'nowrap' }}>Choose Your Tech</p>
           <div style={{ position: 'relative', flex: 1, maxWidth: 260 }}>
@@ -113,9 +113,10 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
           display: 'grid',
           gridTemplateColumns: 'repeat(7, 1fr)',
           gap: '16px',
-          alignItems: 'center',
+          alignItems: 'start',
           justifyItems: 'center',
           height: 320,
+          width: '100%',
           overflowY: 'hidden',
           alignContent: 'start',
         }}>
