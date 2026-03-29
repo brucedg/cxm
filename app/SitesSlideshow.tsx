@@ -26,7 +26,7 @@ export function SitesSlideshow() {
     setTimeout(() => {
       setCurrent(getNext)
       setTimeout(() => setFading(false), 50)
-    }, 400)
+    }, 600)
   }
 
   // Auto-rotate
@@ -71,7 +71,7 @@ export function SitesSlideshow() {
           position: 'absolute', inset: 0,
           background: '#000',
           opacity: fading ? 1 : 0,
-          transition: 'opacity .4s ease-in-out',
+          transition: 'opacity .6s ease-in-out',
           pointerEvents: 'none',
           zIndex: 3,
         }} />
