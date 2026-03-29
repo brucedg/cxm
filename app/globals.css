@@ -150,7 +150,7 @@ body {
   margin-bottom: 20px;
 }
 .tech-search-input::placeholder {
-  color: rgba(255,255,255,.7);
+  color: #fff;
 }
 .v2-clients-strip .clients {
   display: flex;
