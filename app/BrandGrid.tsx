@@ -84,9 +84,10 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
             onChange={e => setSearch(e.target.value)}
             placeholder="Search technologies..."
             style={{
-              flex: 1, maxWidth: 240, padding: '.35rem .7rem', borderRadius: 6,
-              border: '1px solid rgba(255,255,255,.15)', background: 'rgba(255,255,255,.08)',
-              color: '#fff', fontSize: '.78rem', outline: 'none', fontFamily: 'inherit',
+              flex: 1, maxWidth: 260, padding: '.4rem .75rem', borderRadius: 8,
+              border: '1.5px solid rgba(255,255,255,.4)', background: 'rgba(255,255,255,.12)',
+              color: '#fff', fontSize: '.82rem', outline: 'none',
+              fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '.3px',
             }}
           />
         </div>
