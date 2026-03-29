@@ -9,6 +9,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [magicSent, setMagicSent] = useState(false)
+  const [magicLoading, setMagicLoading] = useState(false)
   const router = useRouter()
 
   const submit = async (e: React.FormEvent) => {
@@ -112,10 +114,29 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
             <a href="/forgot-password" style={{ fontSize: '.82rem', color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}>
-              Forgot your password?
+              Forgot password?
             </a>
+            <button
+              onClick={async () => {
+                if (!email.trim()) { setError('Enter your email first'); return }
+                setMagicLoading(true); setError('')
+                try {
+                  await fetch('/api/auth/magic-link', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email }),
+                  })
+                  setMagicSent(true)
+                } catch { setError('Failed to send link') }
+                setMagicLoading(false)
+              }}
+              disabled={magicLoading}
+              style={{ background: 'none', border: 'none', fontSize: '.82rem', color: '#2563eb', fontWeight: 500, cursor: 'pointer' }}
+            >
+              {magicLoading ? 'Sending...' : magicSent ? 'Link sent!' : 'Email me a login link'}
+            </button>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem', margin: '1.5rem 0' }}>

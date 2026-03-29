@@ -6,6 +6,7 @@ import { AdminModal } from './AdminModal'
 type Technology = {
   id: number; name: string; category: string; categories: string[]; svg_logo: string; svg_logo_color: string; color: string
   logo_url: string; url: string; description: string; tags: string[]; sort_order: number; is_active: boolean
+  pricing_tier: string; monthly_cost_usd: number | null
 }
 
 const CATEGORIES = [
@@ -15,7 +16,7 @@ const CATEGORIES = [
   'Marketing', 'Monitoring', 'Payment', 'Personalisation', 'Repository', 'Search', 'Testing', 'Virtualisation',
 ]
 
-const empty = { name: '', categories: [] as string[], svg_logo: '', svg_logo_color: '', color: '', logo_url: '', url: '', description: '', tags: [] as string[], sort_order: 0 }
+const empty = { name: '', categories: [] as string[], svg_logo: '', svg_logo_color: '', color: '', logo_url: '', url: '', description: '', tags: [] as string[], sort_order: 0, pricing_tier: 'free', monthly_cost_usd: null as number | null }
 
 export function TechnologiesAdmin({ authHeader }: { authHeader: string }) {
   const [techs, setTechs] = useState<Technology[]>([])
@@ -43,7 +44,7 @@ export function TechnologiesAdmin({ authHeader }: { authHeader: string }) {
 
   const startEdit = (t: Technology) => {
     setEditing(t); setCreating(false)
-    setForm({ name: t.name, categories: t.categories || [t.category].filter(Boolean), svg_logo: t.svg_logo, svg_logo_color: t.svg_logo_color || '', color: t.color, logo_url: t.logo_url, url: t.url, description: t.description, tags: t.tags || [], sort_order: t.sort_order })
+    setForm({ name: t.name, categories: t.categories || [t.category].filter(Boolean), svg_logo: t.svg_logo, svg_logo_color: t.svg_logo_color || '', color: t.color, logo_url: t.logo_url, url: t.url, description: t.description, tags: t.tags || [], sort_order: t.sort_order, pricing_tier: t.pricing_tier || 'free', monthly_cost_usd: t.monthly_cost_usd })
     setTagsInput((t.tags || []).join(', '))
   }
   const startCreate = () => { setEditing(null); setCreating(true); setForm({ ...empty, sort_order: techs.length + 1 }); setTagsInput('') }
@@ -264,6 +265,21 @@ export function TechnologiesAdmin({ authHeader }: { authHeader: string }) {
                   <input type="color" value={form.color || '#666666'} onChange={e => setForm(f => ({ ...f, color: e.target.value }))} style={{ width: 32, height: 32, border: 'none', background: 'none', cursor: 'pointer' }} />
                   <input style={{ ...inputStyle, width: 60, fontSize: '.75rem' }} value={form.color} onChange={e => setForm(f => ({ ...f, color: e.target.value }))} placeholder="#hex" />
                 </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.75rem' }}>
+              <div>
+                <label style={labelStyle}>Pricing Tier</label>
+                <select style={inputStyle} value={form.pricing_tier} onChange={e => setForm(f => ({ ...f, pricing_tier: e.target.value }))}>
+                  <option value="free">Free / Open Source</option>
+                  <option value="freemium">Freemium</option>
+                  <option value="paid">Paid</option>
+                </select>
+              </div>
+              <div>
+                <label style={labelStyle}>Monthly Cost (USD)</label>
+                <input style={inputStyle} type="number" step="0.01" value={form.monthly_cost_usd ?? ''} onChange={e => setForm(f => ({ ...f, monthly_cost_usd: e.target.value ? parseFloat(e.target.value) : null }))} placeholder="0.00" />
               </div>
             </div>
 

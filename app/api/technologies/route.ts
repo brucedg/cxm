@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
   if (category && search) {
     const q = `%${search}%`
     rows = await sql`
-      SELECT id, name, category, categories, svg_logo, svg_logo_color, color, logo_url, url, description, tags, sort_order
+      SELECT id, name, category, categories, svg_logo, svg_logo_color, color, logo_url, url, description, tags, sort_order, pricing_tier, monthly_cost_usd
       FROM brands
       WHERE is_active = true AND ${category} = ANY(categories)
         AND (name ILIKE ${q} OR ${search} = ANY(tags))
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     `
   } else if (category) {
     rows = await sql`
-      SELECT id, name, category, categories, svg_logo, svg_logo_color, color, logo_url, url, description, tags, sort_order
+      SELECT id, name, category, categories, svg_logo, svg_logo_color, color, logo_url, url, description, tags, sort_order, pricing_tier, monthly_cost_usd
       FROM brands
       WHERE is_active = true AND ${category} = ANY(categories)
       ORDER BY sort_order ASC, name ASC
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
   } else if (search) {
     const q = `%${search}%`
     rows = await sql`
-      SELECT id, name, category, categories, svg_logo, svg_logo_color, color, logo_url, url, description, tags, sort_order
+      SELECT id, name, category, categories, svg_logo, svg_logo_color, color, logo_url, url, description, tags, sort_order, pricing_tier, monthly_cost_usd
       FROM brands
       WHERE is_active = true
         AND (name ILIKE ${q} OR category ILIKE ${q} OR ${search} = ANY(tags))
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     `
   } else {
     rows = await sql`
-      SELECT id, name, category, categories, svg_logo, svg_logo_color, color, logo_url, url, description, tags, sort_order
+      SELECT id, name, category, categories, svg_logo, svg_logo_color, color, logo_url, url, description, tags, sort_order, pricing_tier, monthly_cost_usd
       FROM brands
       WHERE is_active = true
       ORDER BY category ASC, sort_order ASC, name ASC
@@ -104,7 +104,7 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { id, name, category, categories, svg_logo, svg_logo_color, color, logo_url, url, description, tags, sort_order, is_active } = await request.json()
+  const { id, name, category, categories, svg_logo, svg_logo_color, color, logo_url, url, description, tags, sort_order, is_active, pricing_tier, monthly_cost_usd } = await request.json()
   if (!id || !name?.trim()) {
     return NextResponse.json({ error: 'ID and name required' }, { status: 400 })
   }
@@ -127,7 +127,9 @@ export async function PATCH(request: NextRequest) {
       description = ${(description || '').trim()},
       tags = ${tags || []},
       sort_order = ${sort_order || 0},
-      is_active = ${is_active !== false}
+      is_active = ${is_active !== false},
+      pricing_tier = ${pricing_tier || 'free'},
+      monthly_cost_usd = ${monthly_cost_usd || null}
     WHERE id = ${id}
   `
   return NextResponse.json({ success: true })

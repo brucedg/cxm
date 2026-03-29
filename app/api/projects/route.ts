@@ -21,15 +21,22 @@ export async function POST(request: NextRequest) {
   const session = await getSession(request)
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { name, project_type } = await request.json()
+  const { name, project_type, canvas_nodes, canvas_edges, canvas_direction } = await request.json()
   if (!name?.trim() || !project_type) {
     return NextResponse.json({ error: 'Name and project type required' }, { status: 400 })
   }
 
   const sql = getDb()
   const [project] = await sql`
-    INSERT INTO projects (user_id, name, project_type)
-    VALUES (${session.userId}, ${name.trim()}, ${project_type})
+    INSERT INTO projects (user_id, name, project_type, canvas_nodes, canvas_edges, canvas_direction)
+    VALUES (
+      ${session.userId},
+      ${name.trim()},
+      ${project_type},
+      ${JSON.stringify(canvas_nodes || [])},
+      ${JSON.stringify(canvas_edges || [])},
+      ${canvas_direction || 'TB'}
+    )
     RETURNING id, name, project_type, status
   `
 

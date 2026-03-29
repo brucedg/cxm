@@ -64,6 +64,7 @@ function autoArrange(nodes: Node[], edges: Edge[], direction: 'TB' | 'LR' = 'TB'
   })
 }
 
+type CompatEntry = { tech_a_id: number; tech_b_id: number; score: number; note: string }
 type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
 
 type Props = {
@@ -80,6 +81,8 @@ function Canvas({ projectId, projectName, projectType, initialNodes, initialEdge
   const [edges, setEdges] = useState<Edge[]>(initialEdges)
   const [direction, setDirection] = useState<'TB' | 'LR'>(initialDirection)
   const [pickerOpen, setPickerOpen] = useState(false)
+  const [compatMap, setCompatMap] = useState<Map<string, CompatEntry>>(new Map())
+  const [techCosts, setTechCosts] = useState<Map<number, number>>(new Map())
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle')
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; nodeId: string } | null>(null)
   const { fitView } = useReactFlow()
@@ -87,6 +90,31 @@ function Canvas({ projectId, projectName, projectType, initialNodes, initialEdge
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const dirtyRef = useRef(false)
   const undoStack = useRef<{ nodes: Node[]; edges: Edge[] }[]>([])
+
+  // Load compatibility data and tech costs
+  useEffect(() => {
+    fetch('/api/compatibility')
+      .then(r => r.json())
+      .then((entries: CompatEntry[]) => {
+        const map = new Map<string, CompatEntry>()
+        for (const e of entries) map.set(`${e.tech_a_id}-${e.tech_b_id}`, e)
+        setCompatMap(map)
+      })
+      .catch(() => {})
+
+    fetch('/api/technologies')
+      .then(r => r.json())
+      .then((techs: any[]) => {
+        const costs = new Map<number, number>()
+        for (const t of techs) {
+          if (t.monthly_cost_usd && parseFloat(t.monthly_cost_usd) > 0) {
+            costs.set(t.id, parseFloat(t.monthly_cost_usd))
+          }
+        }
+        setTechCosts(costs)
+      })
+      .catch(() => {})
+  }, [])
 
   // Initialize with root node if empty
   useEffect(() => {
@@ -259,6 +287,34 @@ function Canvas({ projectId, projectName, projectType, initialNodes, initialEdge
     setTimeout(() => fitView({ padding: 0.2 }), 100)
   }, [direction, nodes, edges, fitView])
 
+  // Get compatibility info for an edge
+  const getEdgeCompat = useCallback((sourceId: string, targetId: string): { score: number; note: string; color: string } | null => {
+    const sourceNode = nodes.find(n => n.id === sourceId)
+    const targetNode = nodes.find(n => n.id === targetId)
+    if (!sourceNode || !targetNode) return null
+    const aId = (sourceNode.data as any)?.techId
+    const bId = (targetNode.data as any)?.techId
+    if (!aId || !bId) return null
+    const entry = compatMap.get(`${aId}-${bId}`)
+    if (!entry) return null
+    const color = entry.score === 3 ? '#16a34a' : entry.score === 2 ? '#d97706' : '#dc2626'
+    return { score: entry.score, note: entry.note, color }
+  }, [nodes, compatMap])
+
+  // Calculate estimated monthly cost
+  const estimatedCost = nodes
+    .filter(n => n.type === 'tech' && (n.data as any)?.techId)
+    .reduce((sum, n) => sum + (techCosts.get((n.data as any).techId) || 0), 0)
+
+  // Apply compatibility colors to edges
+  const styledEdges = edges.map(e => {
+    const compat = getEdgeCompat(e.source, e.target)
+    if (compat) {
+      return { ...e, style: { stroke: compat.color, strokeWidth: 2 }, label: compat.score === 1 ? '⚠' : undefined }
+    }
+    return e
+  })
+
   const reLayout = useCallback(() => {
     const arranged = autoArrange(nodes, edges, direction)
     setNodes(arranged)
@@ -273,6 +329,11 @@ function Canvas({ projectId, projectName, projectType, initialNodes, initialEdge
         <button onClick={reLayout}>Re-layout</button>
         <button onClick={() => fitView({ padding: 0.2 })}>Fit view</button>
         <button onClick={() => { trackEvent('pdf_exported', { project_id: projectId }); window.open(`/api/projects/${projectId}/export-pdf`, '_blank') }}>Export PDF</button>
+        {estimatedCost > 0 && (
+          <span style={{ fontSize: '.78rem', color: '#666', background: '#f4f4f8', padding: '.25rem .6rem', borderRadius: 6 }}>
+            ~${estimatedCost.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}/mo
+          </span>
+        )}
         <span className={`canvas-save-status ${saveStatus}`}>
           {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : saveStatus === 'error' ? 'Save failed' : ''}
         </span>
@@ -280,7 +341,7 @@ function Canvas({ projectId, projectName, projectType, initialNodes, initialEdge
 
       <ReactFlow
         nodes={nodes}
-        edges={edges}
+        edges={styledEdges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
