@@ -103,7 +103,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
               placeholder="Search"
               className="tech-search-input"
               style={{
-                width: '100%', padding: '.4rem .75rem', paddingRight: search ? '2rem' : '.75rem',
+                width: '100%', padding: '.4rem 2rem .4rem .75rem',
                 borderRadius: 8,
                 border: '2px solid rgba(255,255,255,.6)', background: 'rgba(255,255,255,.2)',
                 color: '#fff', fontSize: '.82rem', outline: 'none',
