@@ -109,7 +109,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
             )}
           </div>
         </div>
-        <div style={{
+        <div className="tech-grid" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(7, 1fr)',
           gap: '16px',
@@ -117,8 +117,10 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
           justifyItems: 'center',
           height: 320,
           width: '100%',
-          overflowY: 'hidden',
+          overflowY: 'scroll',
           alignContent: 'start',
+          scrollbarWidth: 'none' as any,
+          msOverflowStyle: 'none' as any,
         }}>
           {(() => {
             let displayTechs: Technology[]
@@ -131,10 +133,12 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
               // Single char — don't search yet, show featured
               displayTechs = techs
             } else {
-              // No search — show featured with selected ones first
-              const selectedList = techs.filter(t => selected.has(t.id))
-              const unselectedList = techs.filter(t => !selected.has(t.id))
-              displayTechs = [...selectedList, ...unselectedList]
+              // No search — show all techs, selected first, then featured, then rest
+              const selectedList = allTechs.filter(t => selected.has(t.id))
+              const featuredUnselected = techs.filter(t => !selected.has(t.id))
+              const restIds = new Set([...selected, ...techs.map(t => t.id)])
+              const rest = allTechs.filter(t => !restIds.has(t.id)).sort((a, b) => a.name.localeCompare(b.name))
+              displayTechs = [...selectedList, ...featuredUnselected, ...rest]
             }
             return displayTechs
           })().map(t => {
