@@ -73,7 +73,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
 
   return (
     <>
-      <div className="v2-clients-strip" style={{ minWidth: 0, width: '100%', position: 'relative', contain: 'size layout style', height: 680 }}>
+      <div className="v2-clients-strip" style={{ minWidth: 0, width: '100%', position: 'relative', contain: 'layout style' }}>
         {/* Toast confirmation */}
         {flash && (
           <div style={{
