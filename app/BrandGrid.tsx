@@ -120,6 +120,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
             )}
           </div>
         </div>
+        <div style={{ position: 'relative' }}>
         <div className="tech-grid" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(7, 1fr)',
@@ -201,8 +202,8 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
 
         {/* Info bar — overlay on bottom third of grid */}
         <div style={{
-          position: 'absolute', bottom: 80, left: 0, right: 0, zIndex: 5,
-          height: 70,
+          position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 5,
+          height: 80,
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.75rem',
           background: 'linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,.85) 30%, rgba(0,0,0,.95))',
           padding: '0 1rem',
@@ -238,6 +239,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
               </div>
             </>
           )}
+        </div>
         </div>
 
         {/* CTA when techs selected */}
