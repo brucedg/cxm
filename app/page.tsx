@@ -12,7 +12,7 @@ async function getSettings() {
     const map: Record<string, any> = {}
     for (const r of rows) map[r.key] = r.value
     return {
-      hero: map.hero as { tagline: string; title: string; titleLight: string; titleAccent: string; titleEnd: string; description: string; ctas: { text: string; url: string; style: string }[]; disciplines: string[]; backgroundImage?: string } | undefined,
+      hero: map.hero as { tagline: string; title: string; titleLight: string; titleAccent: string; titleEnd: string; description: string; ctas: { text: string; url: string; style: string }[]; disciplines: string[]; backgroundImage?: string; featuredTechIds?: number[] } | undefined,
       contact: map.contact as { email: string; location: string; availability: string; responseTime: string } | undefined,
       social: (map.social_channels || []) as { name: string; url: string }[],
     }
@@ -32,6 +32,7 @@ const defaultHero = {
   ],
   disciplines: ['CXM', 'UI/UX', 'Analytics', 'CMS', 'Motion', 'POC Dev'],
   backgroundImage: '',
+  featuredTechIds: [] as number[],
 }
 
 const defaultContact = {
@@ -78,7 +79,7 @@ export default async function Home() {
                 <a key={i} className={`v2-cta-${cta.style}`} href={cta.url}>{cta.text}</a>
               ))}
             </div>
-            <BrandGrid />
+            <BrandGrid techIds={hero.featuredTechIds} />
           </div>
           </div>
         </div>

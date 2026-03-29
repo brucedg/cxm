@@ -2,23 +2,34 @@
 
 import { useState, useEffect, useRef } from 'react'
 
-type Brand = { id: number; name: string; logo_url: string; url: string; description: string; sort_order: number }
+type Technology = {
+  id: number; name: string; svg_logo: string; svg_logo_color: string; color: string
+  logo_url: string; url: string; description: string; categories: string[]
+}
 
-export function BrandGrid() {
-  const [brands, setBrands] = useState<Brand[]>([])
-  const [hovered, setHovered] = useState<Brand | null>(null)
+export function BrandGrid({ techIds }: { techIds?: number[] }) {
+  const [techs, setTechs] = useState<Technology[]>([])
+  const [hovered, setHovered] = useState<Technology | null>(null)
   const [pos, setPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    fetch('/api/brands').then(r => r.json()).then(setBrands).catch(() => {})
-  }, [])
+    fetch('/api/technologies').then(r => r.json()).then((all: Technology[]) => {
+      if (techIds && techIds.length > 0) {
+        // Preserve the order specified by techIds
+        const techMap = new Map(all.map(t => [t.id, t]))
+        setTechs(techIds.map(id => techMap.get(id)).filter(Boolean) as Technology[])
+      } else {
+        setTechs(all)
+      }
+    }).catch(() => {})
+  }, [techIds])
 
-  const showBrand = (b: Brand, el: HTMLElement) => {
+  const showTech = (t: Technology, el: HTMLElement) => {
     if (hideTimer.current) clearTimeout(hideTimer.current)
     const rect = el.getBoundingClientRect()
     setPos({ x: rect.left + rect.width / 2, y: rect.top })
-    setHovered(b)
+    setHovered(t)
   }
 
   const startHide = () => {
@@ -29,25 +40,25 @@ export function BrandGrid() {
     if (hideTimer.current) clearTimeout(hideTimer.current)
   }
 
-  if (brands.length === 0) return null
+  if (techs.length === 0) return null
 
   return (
     <>
       <div className="v2-clients-strip">
-        <p>Technologies we work with</p>
+        <p>Featured technology we use</p>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(70px, 1fr))',
+          gridTemplateColumns: 'repeat(7, 1fr)',
           gap: '16px',
           alignItems: 'center',
           justifyItems: 'center',
         }}>
-          {brands.map(b => (
+          {techs.map(t => (
             <div
-              key={b.id}
+              key={t.id}
               onMouseEnter={e => {
                 const el = e.currentTarget
-                showBrand(b, el)
+                showTech(t, el)
                 el.style.background = 'rgba(255,255,255,.15)'
                 el.style.borderColor = 'rgba(255,255,255,.15)'
                 el.style.transform = 'translateY(-2px)'
@@ -71,7 +82,14 @@ export function BrandGrid() {
                 transition: 'all .2s',
               }}
             >
-              <img src={b.logo_url} alt={b.name} style={{ width: 32, height: 32, objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
+              {t.svg_logo ? (
+                <div
+                  style={{ width: 28, height: 28, color: '#fff' }}
+                  dangerouslySetInnerHTML={{ __html: t.svg_logo }}
+                />
+              ) : t.logo_url ? (
+                <img src={t.logo_url} alt={t.name} style={{ width: 28, height: 28, objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
+              ) : null}
             </div>
           ))}
         </div>
@@ -96,20 +114,29 @@ export function BrandGrid() {
             minWidth: 220,
             maxWidth: 300,
             pointerEvents: 'auto',
-            transition: 'opacity .15s',
           }}
         >
-          <img
-            src={hovered.logo_url}
-            alt={hovered.name}
-            style={{ width: 48, height: 48, objectFit: 'contain', marginBottom: '.75rem' }}
-          />
+          {(hovered.svg_logo_color || hovered.svg_logo) ? (
+            <div
+              style={{ width: 48, height: 48, margin: '0 auto .75rem', color: hovered.svg_logo_color ? undefined : (hovered.color || '#333') }}
+              dangerouslySetInnerHTML={{ __html: hovered.svg_logo_color || hovered.svg_logo }}
+            />
+          ) : hovered.logo_url ? (
+            <img src={hovered.logo_url} alt={hovered.name} style={{ width: 48, height: 48, objectFit: 'contain', marginBottom: '.75rem' }} />
+          ) : null}
           <h4 style={{
             fontFamily: "'Space Grotesk', sans-serif",
             fontSize: '1rem', fontWeight: 700, marginBottom: '.3rem',
           }}>
             {hovered.name}
           </h4>
+          {hovered.categories?.length > 0 && (
+            <div style={{ display: 'flex', gap: '.25rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '.5rem' }}>
+              {hovered.categories.map(c => (
+                <span key={c} style={{ fontSize: '.68rem', color: '#999', background: '#f4f4f8', padding: '.1rem .4rem', borderRadius: 4 }}>{c}</span>
+              ))}
+            </div>
+          )}
           {hovered.description && (
             <p style={{ fontSize: '.82rem', color: '#666', lineHeight: 1.5, marginBottom: '.75rem' }}>
               {hovered.description}
@@ -125,10 +152,9 @@ export function BrandGrid() {
                 textDecoration: 'none', fontWeight: 600,
               }}
             >
-              Find out more about {hovered.name} →
+              Learn more →
             </a>
           )}
-          {/* Arrow */}
           <div style={{
             position: 'absolute', bottom: -6, left: '50%', transform: 'translateX(-50%) rotate(45deg)',
             width: 12, height: 12, background: '#fff',

@@ -6,10 +6,10 @@ import { HeroAdmin } from './HeroAdmin'
 import { ContactAdmin } from './ContactAdmin'
 import { SocialAdmin } from './SocialAdmin'
 import { TalentsAdmin } from './TalentsAdmin'
-import { BrandsAdmin } from './BrandsAdmin'
+import { TechnologiesAdmin } from './TechnologiesAdmin'
 import { SitesAdmin } from './SitesAdmin'
 
-type Panel = 'hero' | 'talents' | 'brands' | 'sites' | 'contact' | 'social'
+type Panel = 'hero' | 'talents' | 'technologies' | 'sites' | 'contact' | 'social'
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false)
@@ -78,12 +78,12 @@ export default function AdminPage() {
   return (
     <section style={{ paddingTop: '7rem', minHeight: '100vh', background: '#fafaf8' }}>
       <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 2rem 4rem' }}>
-        <AdminHeader breadcrumb={panel === 'hero' ? 'Hero Content' : panel === 'talents' ? 'Talents' : panel === 'brands' ? 'Brands' : panel === 'sites' ? 'Sites' : panel === 'contact' ? 'Contact Details' : 'Social Channels'} />
+        <AdminHeader breadcrumb={panel === 'hero' ? 'Hero Content' : panel === 'talents' ? 'Talents' : panel === 'technologies' ? 'Technologies' : panel === 'sites' ? 'Sites' : panel === 'contact' ? 'Contact Details' : 'Social Channels'} />
 
         <div style={{ display: 'flex', gap: '.5rem', marginBottom: '2rem', flexWrap: 'wrap', alignItems: 'center' }}>
           <button onClick={() => setPanel('hero')} style={tabStyle(panel === 'hero')}>Hero Content</button>
           <button onClick={() => setPanel('talents')} style={tabStyle(panel === 'talents')}>Talents</button>
-          <button onClick={() => setPanel('brands')} style={tabStyle(panel === 'brands')}>Brands</button>
+          <button onClick={() => setPanel('technologies')} style={tabStyle(panel === 'technologies')}>Technologies</button>
           <button onClick={() => setPanel('sites')} style={tabStyle(panel === 'sites')}>Sites</button>
           <button onClick={() => setPanel('contact')} style={tabStyle(panel === 'contact')}>Contact Details</button>
           <button onClick={() => setPanel('social')} style={tabStyle(panel === 'social')}>Social Channels</button>
@@ -101,7 +101,7 @@ export default function AdminPage() {
 
         {panel === 'hero' && <HeroAdmin authHeader={authHeader} />}
         {panel === 'talents' && <TalentsAdmin authHeader={authHeader} />}
-        {panel === 'brands' && <BrandsAdmin authHeader={authHeader} />}
+        {panel === 'technologies' && <TechnologiesAdmin authHeader={authHeader} />}
         {panel === 'sites' && <SitesAdmin authHeader={authHeader} />}
         {panel === 'contact' && <ContactAdmin authHeader={authHeader} />}
         {panel === 'social' && <SocialAdmin authHeader={authHeader} />}
