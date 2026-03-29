@@ -15,7 +15,6 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
   const [search, setSearch] = useState('')
   const [flash, setFlash] = useState<{ id: number; action: 'added' | 'removed' } | null>(null)
   const [hovered, setHovered] = useState<Technology | null>(null)
-  const [pos, setPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
@@ -61,15 +60,12 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
     if (!wasSelected && search.trim()) setSearch('')
   }, [selected, search])
 
-  const showTech = (t: Technology, el: HTMLElement) => {
+  const showTech = (t: Technology) => {
     if (hideTimer.current) clearTimeout(hideTimer.current)
-    const rect = el.getBoundingClientRect()
-    setPos({ x: rect.left + rect.width / 2, y: rect.top })
     setHovered(t)
   }
 
-  const startHide = () => { hideTimer.current = setTimeout(() => setHovered(null), 200) }
-  const cancelHide = () => { if (hideTimer.current) clearTimeout(hideTimer.current) }
+  const startHide = () => { hideTimer.current = setTimeout(() => setHovered(null), 300) }
 
   const selectedTechs = techs.filter(t => selected.has(t.id))
 
@@ -163,7 +159,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
                 onClick={() => toggle(t)}
                 onMouseEnter={e => {
                   const el = e.currentTarget
-                  showTech(t, el)
+                  showTech(t)
                   if (!isSelected) {
                     el.style.background = 'rgba(255,255,255,.15)'
                     el.style.transform = 'translateY(-2px)'
@@ -203,6 +199,43 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
           })}
         </div>
 
+        {/* Info bar — fixed position below grid */}
+        <div style={{
+          height: 56, marginTop: '.5rem',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.75rem',
+          transition: 'opacity .2s',
+          opacity: hovered ? 1 : 0,
+        }}>
+          {hovered && (
+            <>
+              {(hovered.svg_logo_color || hovered.svg_logo) && (
+                <div
+                  style={{ width: 32, height: 32, flexShrink: 0, color: hovered.svg_logo_color ? undefined : (hovered.color || '#fff') }}
+                  dangerouslySetInnerHTML={{ __html: hovered.svg_logo_color || hovered.svg_logo }}
+                />
+              )}
+              <div style={{ minWidth: 0 }}>
+                <span style={{
+                  fontFamily: "'Space Grotesk', sans-serif", fontSize: '.9rem',
+                  fontWeight: 700, color: '#fff', marginRight: '.5rem',
+                }}>
+                  {hovered.name}
+                </span>
+                {hovered.categories?.length > 0 && (
+                  <span style={{ fontSize: '.7rem', color: 'rgba(255,255,255,.5)' }}>
+                    {hovered.categories.join(' · ')}
+                  </span>
+                )}
+                {hovered.description && (
+                  <p style={{ fontSize: '.75rem', color: 'rgba(255,255,255,.6)', lineHeight: 1.4, margin: '.1rem 0 0' }}>
+                    {hovered.description}
+                  </p>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+
         {/* CTA when techs selected */}
         {selected.size > 0 && (
           <div style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.75rem' }}>
@@ -236,60 +269,6 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
         )}
       </div>
 
-      {/* Hover popover */}
-      {hovered && (
-        <div
-          onMouseEnter={cancelHide}
-          onMouseLeave={startHide}
-          style={{
-            position: 'fixed',
-            left: pos.x,
-            top: pos.y - 12,
-            transform: 'translate(-50%, -100%)',
-            background: '#fff',
-            borderRadius: 14,
-            padding: '1.25rem 1.5rem',
-            textAlign: 'center',
-            boxShadow: '0 12px 40px rgba(0,0,0,.2)',
-            zIndex: 10000,
-            minWidth: 220,
-            maxWidth: 300,
-            pointerEvents: 'auto',
-          }}
-        >
-          {(hovered.svg_logo_color || hovered.svg_logo) ? (
-            <div
-              style={{ width: 48, height: 48, margin: '0 auto .75rem', color: hovered.svg_logo_color ? undefined : (hovered.color || '#333') }}
-              dangerouslySetInnerHTML={{ __html: hovered.svg_logo_color || hovered.svg_logo }}
-            />
-          ) : hovered.logo_url ? (
-            <img src={hovered.logo_url} alt={hovered.name} style={{ width: 48, height: 48, objectFit: 'contain', marginBottom: '.75rem' }} />
-          ) : null}
-          <h4 style={{
-            fontFamily: "'Space Grotesk', sans-serif",
-            fontSize: '1rem', fontWeight: 700, marginBottom: '.3rem',
-          }}>
-            {hovered.name}
-          </h4>
-          {hovered.categories?.length > 0 && (
-            <div style={{ display: 'flex', gap: '.25rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '.5rem' }}>
-              {hovered.categories.map(c => (
-                <span key={c} style={{ fontSize: '.68rem', color: '#999', background: '#f4f4f8', padding: '.1rem .4rem', borderRadius: 4 }}>{c}</span>
-              ))}
-            </div>
-          )}
-          {hovered.description && (
-            <p style={{ fontSize: '.82rem', color: '#666', lineHeight: 1.5, marginBottom: '.5rem' }}>
-              {hovered.description}
-            </p>
-          )}
-          <div style={{
-            position: 'absolute', bottom: -6, left: '50%', transform: 'translateX(-50%) rotate(45deg)',
-            width: 12, height: 12, background: '#fff',
-            boxShadow: '3px 3px 4px rgba(0,0,0,.05)',
-          }} />
-        </div>
-      )}
     </>
   )
 }
