@@ -23,24 +23,29 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
       } else {
         setTechs(all)
       }
-      // Restore selections from localStorage
+      // If user has edited before, restore their selections; otherwise pre-select featured
       try {
         const stored = localStorage.getItem('cxm-your-tech')
-        if (stored) setSelected(new Set(JSON.parse(stored)))
-      } catch { /* ignore */ }
+        if (stored) {
+          setSelected(new Set(JSON.parse(stored)))
+        } else if (techIds && techIds.length > 0) {
+          setSelected(new Set(techIds))
+        }
+      } catch {
+        if (techIds && techIds.length > 0) setSelected(new Set(techIds))
+      }
     }).catch(() => {})
   }, [techIds])
 
-  // Persist selections
+  // Persist selections once user interacts
+  const hasEdited = useRef(false)
   useEffect(() => {
-    if (selected.size > 0) {
-      localStorage.setItem('cxm-your-tech', JSON.stringify([...selected]))
-    } else {
-      localStorage.removeItem('cxm-your-tech')
-    }
+    if (!hasEdited.current) return
+    localStorage.setItem('cxm-your-tech', JSON.stringify([...selected]))
   }, [selected])
 
   const toggle = useCallback((tech: Technology) => {
+    hasEdited.current = true
     setSelected(prev => {
       const next = new Set(prev)
       if (next.has(tech.id)) {
@@ -70,12 +75,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
   return (
     <>
       <div className="v2-clients-strip">
-        <p>
-          {selected.size > 0
-            ? `Your technology stack (${selected.size}) — tap to add or remove`
-            : 'Tap the technologies you use'
-          }
-        </p>
+        <p>Technology</p>
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(7, 1fr)',
