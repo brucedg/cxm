@@ -71,14 +71,14 @@ export default async function Home() {
             <div style={{ marginTop: '2rem' }}>
               <SitesSlideshow />
             </div>
-          </div>
-          <div>
-            {hero.description && <p className="v2-hero-desc">{hero.description}</p>}
-            <div className="v2-ctas">
+            <div className="v2-ctas" style={{ marginTop: '1.5rem' }}>
               {hero.ctas.map((cta, i) => (
                 <a key={i} className={`v2-cta-${cta.style}`} href={cta.url}>{cta.text}</a>
               ))}
             </div>
+          </div>
+          <div>
+            {hero.description && <p className="v2-hero-desc">{hero.description}</p>}
             <BrandGrid techIds={hero.featuredTechIds} />
           </div>
           </div>
