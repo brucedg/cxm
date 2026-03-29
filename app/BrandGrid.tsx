@@ -66,6 +66,25 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
 
   const startHide = () => { hideTimer.current = setTimeout(() => setHovered(null), 300) }
 
+  // Check if a hex colour is too dark to show on dark background
+  const isTooLight = (hex: string) => {
+    if (!hex || !hex.startsWith('#')) return false
+    const r = parseInt(hex.slice(1, 3), 16)
+    const g = parseInt(hex.slice(3, 5), 16)
+    const b = parseInt(hex.slice(5, 7), 16)
+    // Relative luminance — below 0.15 is too dark for dark bg
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+    return luminance > 0.85
+  }
+  const isDark = (hex: string) => {
+    if (!hex || !hex.startsWith('#')) return true
+    const r = parseInt(hex.slice(1, 3), 16)
+    const g = parseInt(hex.slice(3, 5), 16)
+    const b = parseInt(hex.slice(5, 7), 16)
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+    return luminance < 0.25
+  }
+
   const selectedTechs = techs.filter(t => selected.has(t.id))
 
   if (techs.length === 0) return null
@@ -192,7 +211,12 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
                 }}
               >
                 {showColor && (t.svg_logo_color || t.svg_logo) ? (
-                  <div style={{ width: 28, height: 28, color: t.svg_logo_color ? undefined : (t.color || '#fff') }} dangerouslySetInnerHTML={{ __html: t.svg_logo_color || t.svg_logo }} />
+                  isDark(t.color) ? (
+                    // Dark brand colour — show monochrome with a lighter tint instead of invisible colour SVG
+                    <div style={{ width: 28, height: 28, color: '#a0c4ff' }} dangerouslySetInnerHTML={{ __html: t.svg_logo }} />
+                  ) : (
+                    <div style={{ width: 28, height: 28, color: t.svg_logo_color ? undefined : (t.color || '#fff') }} dangerouslySetInnerHTML={{ __html: t.svg_logo_color || t.svg_logo }} />
+                  )
                 ) : t.svg_logo ? (
                   <div style={{ width: 28, height: 28, color: '#fff' }} dangerouslySetInnerHTML={{ __html: t.svg_logo }} />
                 ) : t.logo_url ? (
