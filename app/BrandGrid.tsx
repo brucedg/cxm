@@ -13,6 +13,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
   const [allTechs, setAllTechs] = useState<Technology[]>([])
   const [selected, setSelected] = useState<Set<number>>(new Set())
   const [search, setSearch] = useState('')
+  const [flash, setFlash] = useState<{ id: number; action: 'added' | 'removed' } | null>(null)
   const [hovered, setHovered] = useState<Technology | null>(null)
   const [pos, setPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -43,6 +44,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
 
   const toggle = useCallback((tech: Technology) => {
     hasEdited.current = true
+    const wasSelected = selected.has(tech.id)
     setSelected(prev => {
       const next = new Set(prev)
       if (next.has(tech.id)) {
@@ -53,7 +55,9 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
       }
       return next
     })
-  }, [])
+    setFlash({ id: tech.id, action: wasSelected ? 'removed' : 'added' })
+    setTimeout(() => setFlash(null), 1200)
+  }, [selected])
 
   const showTech = (t: Technology, el: HTMLElement) => {
     if (hideTimer.current) clearTimeout(hideTimer.current)
@@ -140,6 +144,17 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
                 ) : t.logo_url ? (
                   <img src={t.logo_url} alt={t.name} style={{ width: 28, height: 28, objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
                 ) : null}
+                {flash?.id === t.id && (
+                  <span style={{
+                    position: 'absolute', bottom: -10, left: '50%', transform: 'translateX(-50%)',
+                    fontSize: '.6rem', fontWeight: 700, whiteSpace: 'nowrap',
+                    color: flash.action === 'added' ? '#4ade80' : '#f87171',
+                    opacity: 1, transition: 'opacity .8s',
+                    pointerEvents: 'none',
+                  }}>
+                    {flash.action === 'added' ? '✓ Added' : '✕ Removed'}
+                  </span>
+                )}
               </div>
             )
           })}
@@ -225,18 +240,6 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
               {hovered.description}
             </p>
           )}
-          <button
-            onClick={() => { toggle(hovered); setHovered(null) }}
-            style={{
-              display: 'block', width: '100%', marginTop: '.5rem',
-              padding: '.4rem', borderRadius: 6, border: 'none',
-              background: selected.has(hovered.id) ? '#dc2626' : '#2563eb',
-              color: '#fff', fontSize: '.78rem', fontWeight: 600, cursor: 'pointer',
-              transition: 'background .15s',
-            }}
-          >
-            {selected.has(hovered.id) ? 'Remove from my stack' : '+ Add to my stack'}
-          </button>
           <div style={{
             position: 'absolute', bottom: -6, left: '50%', transform: 'translateX(-50%) rotate(45deg)',
             width: 12, height: 12, background: '#fff',
