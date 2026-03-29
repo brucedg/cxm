@@ -116,7 +116,7 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
           alignItems: 'center',
           justifyItems: 'center',
           maxHeight: search.trim() ? '320px' : 'none',
-          overflowY: search.trim() ? 'auto' : 'visible',
+          overflowY: search.trim() ? 'hidden' : 'visible',
           transition: 'max-height .3s',
         }}>
           {(() => {
