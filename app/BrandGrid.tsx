@@ -202,12 +202,12 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
                   width: 56, height: 56,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   borderRadius: 10,
-                  background: isSelected ? 'rgba(37,99,235,.35)' : 'rgba(255,255,255,.1)',
-                  border: isSelected ? '2px solid rgba(37,99,235,.7)' : '1.5px solid rgba(255,255,255,.45)',
+                  background: isSelected ? 'rgba(37,99,235,.5)' : 'rgba(255,255,255,.1)',
+                  border: isSelected ? '2px solid rgba(100,160,255,.9)' : '1.5px solid rgba(255,255,255,.45)',
                   cursor: 'pointer',
                   transition: 'all .2s',
-                  boxShadow: isSelected ? '0 0 12px rgba(37,99,235,.2)' : 'none',
-                  transform: isSelected ? 'scale(1.05)' : 'scale(1)',
+                  boxShadow: isSelected ? '0 0 16px rgba(37,99,235,.4), inset 0 0 8px rgba(100,160,255,.15)' : 'none',
+                  transform: isSelected ? 'scale(1.1)' : 'scale(1)',
                 }}
               >
                 {(() => {
