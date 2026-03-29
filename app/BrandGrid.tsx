@@ -115,9 +115,8 @@ export function BrandGrid({ techIds }: { techIds?: number[] }) {
           gap: '16px',
           alignItems: 'center',
           justifyItems: 'center',
-          maxHeight: search.trim() ? '320px' : 'none',
-          overflowY: search.trim() ? 'hidden' : 'visible',
-          transition: 'max-height .3s',
+          maxHeight: search.trim().length >= 2 ? '320px' : 'none',
+          overflowY: search.trim().length >= 2 ? 'hidden' : 'visible',
         }}>
           {(() => {
             let displayTechs: Technology[]
