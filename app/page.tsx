@@ -58,7 +58,7 @@ export default async function Home() {
 
       {/* HERO */}
       <section className="v2-hero" style={hero.backgroundImage ? { background: `url(${hero.backgroundImage}) center/cover no-repeat` } : undefined}>
-        <div>
+        <div style={{ width: '100%' }}>
           <div className="v2-tag">{hero.tagline}</div>
           <div className="v2-hero-inner">
           <div>
